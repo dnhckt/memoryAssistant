@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {Col, Row, Grid} from "react-native-easy-grid";
-import { Alert, TouchableOpacity, View, Text, Image} from 'react-native';
+import {Alert, TouchableOpacity, View, Text, Image} from 'react-native';
 import Sprites from '../assets/Sprites';
 import styles from '../assets/Style';
 import ImageFadeView from '../assets/ImageFadeView';
@@ -15,7 +15,16 @@ import PromptFadeView from '../assets/PromptFadeView';
 
     Add user based gallery
     */
-
+function shuffle(array) {
+    var j, x, i;
+    for (i = array.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = array[i];
+        array[i] = array[j];
+        array[j] = x;
+    }
+    return array;
+}
 // Class for the game
 class PALScreen extends Component {
     static navigationOptions = {
@@ -28,7 +37,6 @@ class PALScreen extends Component {
             spriteArray: [Sprites.beach, Sprites.bev, Sprites.bikini, 
                           Sprites.bishop, Sprites.coconut, Sprites.dolphin, Sprites.fish],
             
-         //   gameStarted: false, // Control game loop 
             levelNum: 0, // Control level num 
             test: null, // Control timer 
 
@@ -61,8 +69,7 @@ class PALScreen extends Component {
             promptBox: null, //Prompt box image
             promptBoxStart: null,
 
-            randBoxArray: [3], // Array for box vars
-            randImgArray: [3], // Array for img vars //
+            randBoxArray: [0, 1, 2, 3, 4, 5, 6], // Array for box vars
             timer: 0, // timer 
         }
     }
@@ -74,18 +81,14 @@ class PALScreen extends Component {
   
     componentDidUpdate() {
         if(this.state.timer == 5){ 
-        alert("box1: " + this.state.box1Start + " box2: " + this.state.box2Start + " box3: " + this.state.box3Start);
+           // alert("box1: " + this.state.box1Start + " box2: " + this.state.box2Start + " box3: " + this.state.box3Start);
         }
     }
-    beginGame() {
-        // this.state.test = setInterval(this.updateClock, 1000); // Updates clock every second
-        // this.state.gameStarted = true;
-        // this.state.level = 2;
-        // this.generateRand();    
+    beginGame() {   
         let gameStarted = true;
         let level = this.state.levelNum + 1;
         this.setState({test: setInterval(this.updateClock,1000), gameStarted, level, levelNum: level});
-        this.generateRand(gameStarted, 3);
+        this.generateRand(gameStarted, 5);
     }
     endLevel(gameWon) {
         if(gameWon) {
@@ -104,58 +107,49 @@ class PALScreen extends Component {
     // Function to generate random numbers 
     generateRand(gameStarted,level) {
         if(gameStarted) {
-            // Level based random images
 
+            shuffle(this.state.spriteArray); // randomise order of sprites 
+
+            // Level based random images
             let randBoxArray = [...this.state.randBoxArray];
-            let randImgArray = [...this.state.randImgArray];
 
             for (var i=0; i < level; i++) 
             {
-                randBoxArray[i] = Math.floor(Math.random() * 3);
-       
-                this.setState({randBoxArray});
+                shuffle(randBoxArray); // Set a value for each step in array
+                this.setState({randBoxArray});   
+         }        
 
-                randImgArray[i] = Math.floor(Math.random() * 7);
-                this.setState({randImgArray});
-`   `
+            //shuffle(randBoxArray); // randomise boxes
+            
+
+            for (var i=0; i < level; i++) 
+            {
                 let y = i + 2.5;
-        
+            
                 switch (randBoxArray[i]) { 
                     case 0:
-                       this.setState({box1: this.state.spriteArray[randImgArray[i]], box1Start: i+1, box1End: y});
+                       this.setState({box1: this.state.spriteArray[i], box1Start: i+1, box1End: y});
                     break;
                     case 1:
-                        this.setState({box2: this.state.spriteArray[randImgArray[i]], box2Start: i+1, box2End: y});
+                        this.setState({box2: this.state.spriteArray[i], box2Start: i+1, box2End: y});
                     break;
                     case 2:
-                        this.setState({box3: this.state.spriteArray[randImgArray[i]], box3Start: i+1, box3End: y});
+                        this.setState({box3: this.state.spriteArray[i], box3Start: i+1, box3End: y});
                     break;
-
-                    // case 3:
-                    //     this.setState({box4: this.state.spriteArray[randImgArray[i]], box4Start: i, box4End: y});
-                    // break;  
-                    // case 4:
-                    //     this.setState({box5: this.state.spriteArray[randImgArray[i]], box5Start: i, box5End: y});
-                    // break;
-                    // case 5:
-                    //     this.setState({box6: this.state.spriteArray[randImgArray[i]], box6Start: i, box6End: y});
-                    // break;
+                    case 3:
+                        this.setState({box4: this.state.spriteArray[i], box4Start: i+1, box4End: y});
+                    break;  
+                    case 4:
+                        this.setState({box5: this.state.spriteArray[i], box5Start: i+1, box5End: y});
+                    break;
+                    case 5:
+                        this.setState({box6: this.state.spriteArray[i], box6Start: i+1, box6End: y});
+                    break;       
                 }
-                if(i+1 == level){
-
-                        if(this.state.box1 == null)
-                        {
-                                for(j = 0; j < level; j++)
-                                {
-                                    if(this.state.box2 != j && this.state.box3 != j)
-                                        {
-                                            this.setState({box1: this.state.spriteArray[randImgArray[i]], box1Start: j+1, box1End: y});
-                                        }
-                                }
-                        }                           
-                }   
             }
-        
+               
+
+ 
             
         }
     }
@@ -254,26 +248,26 @@ class PALScreen extends Component {
                         </Col>
                     </Row> 
 
-                    {/* <Row>
+                    <Row>
                     <Col style={[styles.gameButton]}>
-        {/* Box 4  
+        {/* Box 4  */}
                             <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(3)}>
                                 {this.renderImg(this.state.box4, this.state.box4Start, this.state.box4End)}
                             </TouchableOpacity>
                     </Col>
                 <Col style={[styles.gameButton]}>
-        {/* Box 5   
+        {/* Box 5  */}
                             <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(4)}>
                                 {this.renderImg(this.state.box5, this.state.box5Start, this.state.box5End)}
                             </TouchableOpacity>
                     </Col>
                     <Col style={[styles.gameButton]}>
-        {/* Box 6    
+        {/* Box 6  */}
                            <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(5)}>
                                 {this.renderImg(this.state.box6, this.state.box6Start, this.state.box6End)}
                             </TouchableOpacity>
                     </Col>
-                    </Row> */}
+                    </Row>
 
                     <Row style={{borderWidth: 1}}>
                         <Col><Text>{this.state.timer}</Text></Col>
