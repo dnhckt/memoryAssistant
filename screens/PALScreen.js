@@ -1,73 +1,21 @@
 import React, { Component } from "react";
 import {Col, Row, Grid} from "react-native-easy-grid";
-import { Alert, TouchableOpacity, View, Text, Animated, Image} from 'react-native';
+import { Alert, TouchableOpacity, View, Text, Image} from 'react-native';
 import Sprites from '../assets/Sprites';
-import styles from '../assets/Style'
-
-
+import styles from '../assets/Style';
+import ImageFadeView from '../assets/ImageFadeView';
+import PromptFadeView from '../assets/PromptFadeView';
     /*
     Fix touchable opacity (colour feedback)
     
-    (Separate function for promptbox where time = total of level times)
+    (Separate function for promptbox where time = total of level times)    
     
-    Add proper levels 
+    Levels - validation against null (not the same) 
+    Images- randomise order of sprite array instead of selecting random?
+
+    Add user based gallery
     */
 
-// Images that fade in / out
-class FadeInView extends React.Component {
-    state = {
-      imgFade: new Animated.Value(0), // Set inital opacity to 0 
-    }
-    
-    // Function to fade image in 
-    fadeIn() {
-        Animated.timing(                 
-            this.state.imgFade,           
-            {
-              // Set opacity to 1 over 1 second  
-              toValue: 1,                
-              duration: 1000,          
-            }
-          ).start();                  
-    }
-    // Function to fade image out 
-    fadeOut() {
-        Animated.timing(                  
-            this.state.imgFade,            
-            {
-              // Set opacity to 0 over 1 second
-              toValue: 0,                  
-              duration: 1000,             
-            }
-          ).start();          
-          
-    }
-    // When component mounts, fade in 
-    componentDidMount() {
-        this.fadeIn();
-    }
-    // When component updates, fade out 
-    componentDidUpdate() {
-        if(this.props.endTime != 3) {
-            this.fadeOut();
-        }
-    }
-
-
-    render() {
-      let { imgFade } = this.state;
-  
-      return (
-        <Animated.View 
-          style={{...this.props.style,
-            opacity: imgFade,    
-          }}
-        >
-            {this.props.children}
-        </Animated.View>
-      );
-    }
-}
 // Class for the game
 class PALScreen extends Component {
     static navigationOptions = {
@@ -111,9 +59,10 @@ class PALScreen extends Component {
             /* End box vars */
 
             promptBox: null, //Prompt box image
+            promptBoxStart: null,
 
-            randBoxArray: [6], // Array for box vars
-            randImgArray: [6], // Array for img vars //
+            randBoxArray: [3], // Array for box vars
+            randImgArray: [3], // Array for img vars //
             timer: 0, // timer 
         }
     }
@@ -123,6 +72,11 @@ class PALScreen extends Component {
         this.beginGame();
     }
   
+    componentDidUpdate() {
+        if(this.state.timer == 5){ 
+        alert("box1: " + this.state.box1Start + " box2: " + this.state.box2Start + " box3: " + this.state.box3Start);
+        }
+    }
     beginGame() {
         // this.state.test = setInterval(this.updateClock, 1000); // Updates clock every second
         // this.state.gameStarted = true;
@@ -130,11 +84,17 @@ class PALScreen extends Component {
         // this.generateRand();    
         let gameStarted = true;
         let level = this.state.levelNum + 1;
-        this.setState({test: setInterval(this.updateClock,1000), gameStarted, level});
-        this.generateRand(gameStarted, level);
+        this.setState({test: setInterval(this.updateClock,1000), gameStarted, level, levelNum: level});
+        this.generateRand(gameStarted, 3);
     }
     endLevel(gameWon) {
         if(gameWon) {
+            if(this.state.levelNum == 3)
+            {
+                this.setState({gameStarted: false, timer: 0});
+                clearInterval(this.state.test);
+                alert("You win!");                     
+            }
             alert("Correct! Next Level");
             this.beginGame();
         } else { alert("Incorrect! Game over.");}
@@ -145,40 +105,64 @@ class PALScreen extends Component {
     generateRand(gameStarted,level) {
         if(gameStarted) {
             // Level based random images
+
+            let randBoxArray = [...this.state.randBoxArray];
+            let randImgArray = [...this.state.randImgArray];
+
             for (var i=0; i < level; i++) 
             {
-                let randBoxArray = [...this.state.randBoxArray];
-                randBoxArray[i] = Math.floor(Math.random() * 6); 
+                randBoxArray[i] = Math.floor(Math.random() * 3);
+       
                 this.setState({randBoxArray});
 
-                let randImgArray = [...this.state.randImgArray];
                 randImgArray[i] = Math.floor(Math.random() * 7);
                 this.setState({randImgArray});
-
-                let y = i + 1.5;
-                switch (randBoxArray[i]) {
+`   `
+                let y = i + 2.5;
+        
+                switch (randBoxArray[i]) { 
                     case 0:
-                       this.setState({box1: this.state.spriteArray[randImgArray[i]], box1Start: i, box1End: y});
+                       this.setState({box1: this.state.spriteArray[randImgArray[i]], box1Start: i+1, box1End: y});
                     break;
                     case 1:
-                        this.setState({box2: this.state.spriteArray[randImgArray[i]], box2Start: i, box2Start: y});
+                        this.setState({box2: this.state.spriteArray[randImgArray[i]], box2Start: i+1, box2End: y});
                     break;
                     case 2:
-                        this.setState({box3: this.state.spriteArray[randImgArray[i]], box3Start: i, box3Start: y});
+                        this.setState({box3: this.state.spriteArray[randImgArray[i]], box3Start: i+1, box3End: y});
                     break;
-                    case 3:
-                        this.setState({box4: this.state.spriteArray[randImgArray[i]], box4Start: i, box4End: y});
-                    break;  
-                    case 4:
-                        this.setState({box5: this.state.spriteArray[randImgArray[i]], box5Start: i, box5End: y});
-                    break;
-                    case 5:
-                        this.setState({box6: this.state.spriteArray[randImgArray[i]], box6Start: i, box6End: y});
-                    break;
-                }               
+
+                    // case 3:
+                    //     this.setState({box4: this.state.spriteArray[randImgArray[i]], box4Start: i, box4End: y});
+                    // break;  
+                    // case 4:
+                    //     this.setState({box5: this.state.spriteArray[randImgArray[i]], box5Start: i, box5End: y});
+                    // break;
+                    // case 5:
+                    //     this.setState({box6: this.state.spriteArray[randImgArray[i]], box6Start: i, box6End: y});
+                    // break;
+                }
+                if(i+1 == level){
+
+                        if(this.state.box1 == null)
+                        {
+                                for(j = 0; j < level; j++)
+                                {
+                                    if(this.state.box2 != j && this.state.box3 != j)
+                                        {
+                                            this.setState({box1: this.state.spriteArray[randImgArray[i]], box1Start: j+1, box1End: y});
+                                        }
+                                }
+                        }                           
+                }   
             }
-          
+        
+            
         }
+    }
+    triggerPrompt(){
+        if (levelNum == 1){
+        this.setState({promptBox: this.state.spriteArray[randImgArray[levelNum]], promptBoxStart: (this.state.levelNum*3)})
+        }                
     }
     updateClock=()=> {
         this.setState({timer: this.state.timer + 1}) // Stores clock second var as timer 
@@ -188,12 +172,24 @@ class PALScreen extends Component {
     renderImg(img, startTime, endTime) {
         if(this.state.timer > startTime) {
             return( 
-                <FadeInView
+                <ImageFadeView
                 startTime = {startTime}
                 endTime = {endTime}
                 >
                     <Image style={{height: '100%', width: '100%'}} source={img}></Image>
-                </FadeInView>   
+                </ImageFadeView>   
+            );
+        }
+    }
+    // Function to display prompt
+    renderPromptImg(img, startTime) {
+        if(this.state.timer > startTime) {
+            return( 
+                <PromptFadeView 
+                startTime = {startTime}
+                >
+                    <Image style={{height: '100%', width: '100%'}} source={img}></Image>
+                </PromptFadeView>   
             );
         }
     }
@@ -258,32 +254,32 @@ class PALScreen extends Component {
                         </Col>
                     </Row> 
 
-                    <Row>
+                    {/* <Row>
                     <Col style={[styles.gameButton]}>
-        {/* Box 4 */}   
+        {/* Box 4  
                             <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(3)}>
                                 {this.renderImg(this.state.box4, this.state.box4Start, this.state.box4End)}
                             </TouchableOpacity>
                     </Col>
                 <Col style={[styles.gameButton]}>
-        {/* Box 5 */}   
+        {/* Box 5   
                             <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(4)}>
                                 {this.renderImg(this.state.box5, this.state.box5Start, this.state.box5End)}
                             </TouchableOpacity>
                     </Col>
                     <Col style={[styles.gameButton]}>
-        {/* Box 6 */}   
+        {/* Box 6    
                            <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(5)}>
                                 {this.renderImg(this.state.box6, this.state.box6Start, this.state.box6End)}
                             </TouchableOpacity>
                     </Col>
-                    </Row>
+                    </Row> */}
 
                     <Row style={{borderWidth: 1}}>
                         <Col><Text>{this.state.timer}</Text></Col>
                         <Col style={{borderWidth: 5, marginTop: '1%', marginBottom: '1%',}}>
         {/* Prompt Box */}   
-                            {this.renderImg(this.state.promptBox, 2, 3)}
+                            {this.renderPromptImg(this.state.promptBox, this.state.promptBoxStart)}
                         </Col>
                         <Col></Col>
                     </Row>
