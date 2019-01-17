@@ -11,7 +11,6 @@ import PromptFadeView from '../assets/PromptFadeView';
     (Separate function for promptbox where time = total of level times)    
     
     Levels - validation against null (not the same) 
-    Images- randomise order of sprite array instead of selecting random?
 
     Add user based gallery
     */
@@ -78,32 +77,49 @@ class PALScreen extends Component {
     componentDidMount() {   
         this.beginGame();
     }
-  
+    componentWillUnmount() {
+        this.resetBoxes();
+        this.setState({timer: 0});
+        clearInterval(this.state.test);
+    }
     componentDidUpdate() {
         if(this.state.timer == 5){ 
            // alert("box1: " + this.state.box1Start + " box2: " + this.state.box2Start + " box3: " + this.state.box3Start);
         }
     }
+
     beginGame() {   
         let gameStarted = true;
         let level = this.state.levelNum + 1;
-        this.setState({test: setInterval(this.updateClock,1000), gameStarted, level, levelNum: level});
-        this.generateRand(gameStarted, 5);
+        this.setState({test: setInterval(this.updateClock,1000), gameStarted, levelNum: level});
+        this.generateRand(gameStarted, level);
     }
+    
     endLevel(gameWon) {
+        this.resetBoxes();
+        this.setState({timer: 0});
+        clearInterval(this.state.test);
+
         if(gameWon) {
-            if(this.state.levelNum == 3)
+            if(this.state.levelNum == 7)
             {
-                this.setState({gameStarted: false, timer: 0});
-                clearInterval(this.state.test);
+                this.setState({gameStarted: false});
                 alert("You win!");                     
             }
             alert("Correct! Next Level");
             this.beginGame();
-        } else { alert("Incorrect! Game over.");}
-        this.setState({gameStarted: false, timer: 0});
-        clearInterval(this.state.test);
+        } 
+        else {alert("Incorrect! Game over.");}
+        this.setState({gameStarted: false});
     }
+
+    resetBoxes() {
+        this.setState({box1: null, box2: null, box3: null, box4: null, box5: null, box6: null});
+        this.setState({box1Start: null, box2Start: null, box3Start: null, box4Start: null, box5Start: null, box6Start: null});
+        this.setState({box1End: null, box2End: null, box3End: null, box4End: null, box5End: null, box6End: null});
+        this.setState({promptBox: null, promptBoxStart: null});
+    }
+
     // Function to generate random numbers 
     generateRand(gameStarted,level) {
         if(gameStarted) {
@@ -117,10 +133,7 @@ class PALScreen extends Component {
             {
                 shuffle(randBoxArray); // Set a value for each step in array
                 this.setState({randBoxArray});   
-         }        
-
-            //shuffle(randBoxArray); // randomise boxes
-            
+            }                    
 
             for (var i=0; i < level; i++) 
             {
@@ -148,16 +161,13 @@ class PALScreen extends Component {
                 }
             }
                
-
- 
+            if (this.state.levelNum == 0){
+                this.setState({promptBox: this.state.spriteArray[0], promptBoxStart: (this.state.levelNum+3)})
+            }      
             
         }
     }
-    triggerPrompt(){
-        if (levelNum == 1){
-        this.setState({promptBox: this.state.spriteArray[randImgArray[levelNum]], promptBoxStart: (this.state.levelNum*3)})
-        }                
-    }
+
     updateClock=()=> {
         this.setState({timer: this.state.timer + 1}) // Stores clock second var as timer 
     }
@@ -166,11 +176,11 @@ class PALScreen extends Component {
     renderImg(img, startTime, endTime) {
         if(this.state.timer > startTime) {
             return( 
-                <ImageFadeView
+                <ImageFadeView style={{}}
                 startTime = {startTime}
                 endTime = {endTime}
                 >
-                    <Image style={{height: '100%', width: '100%'}} source={img}></Image>
+                    <Image style={{maxHeight: '100%', maxWidth: '100%'}} source={img}></Image>
                 </ImageFadeView>   
             );
         }
@@ -190,35 +200,36 @@ class PALScreen extends Component {
 
     // Function to validate user input
     userInput(input) {
-        for (var i=0; i < this.state.level; i++) 
-        {
+        // for (var i=0; i < this.state.level; i++) 
+        // {
+        var i = 0;
         switch(input) {
                 case 0:
-                    if(this.state.randBoxArray[i] == 0) {this.endLevel(true);}
+                    if(this.state.randBoxArray[i] == 0) {this.endLevel(true);i++;}
                     else{this.endLevel(false);}
                 break;
                 case 1:
-                    if(this.state.randBoxArray[i] == 1) {this.endLevel(true);}
+                    if(this.state.randBoxArray[i] == 1) {this.endLevel(true);i++;}
                     else{this.endLevel(false);}
                 break;
                 case 2:
-                    if(this.state.randBoxArray[i] == 2) {this.endLevel(true);}
+                    if(this.state.randBoxArray[i] == 2) {this.endLevel(true);i++;}
                     else{this.endLevel(false);}
                 break;
                 case 3:
-                    if(this.state.randBoxArray[i] == 3) {this.endLevel(true);}
+                    if(this.state.randBoxArray[i] == 3) {this.endLevel(true);i++;}
                     else{this.endLevel(false);}
                 break;
                 case 4:
-                    if(this.state.randBoxArray[i] == 4) {this.endLevel(true);}
+                    if(this.state.randBoxArray[i] == 4) {this.endLevel(true);i++;}
                     else{this.endLevel(false);}
                 break;
                 case 5:
-                    if(this.state.randBoxArray[i] == 5) {this.endLevel(true);}
+                    if(this.state.randBoxArray[i] == 5) {this.endLevel(true);i++;}
                     else{this.endLevel(false);}
                 break;
             }
-        }
+        //}
     }
     render() {
         return (
@@ -273,7 +284,7 @@ class PALScreen extends Component {
                         <Col><Text>{this.state.timer}</Text></Col>
                         <Col style={{borderWidth: 5, marginTop: '1%', marginBottom: '1%',}}>
         {/* Prompt Box */}   
-                            {this.renderPromptImg(this.state.promptBox, this.state.promptBoxStart)}
+                        {this.renderPromptImg(this.state.promptBox, this.state.promptBoxStart)}
                         </Col>
                         <Col></Col>
                     </Row>
@@ -284,4 +295,5 @@ class PALScreen extends Component {
         );
     }
 }
+
 export default PALScreen;
