@@ -70,6 +70,7 @@ class PALScreen extends Component {
 
             randBoxArray: [0, 1, 2, 3, 4, 5, 6], // Array for box vars
             timer: 0, // timer 
+            inputIndex: 0, // To advance user input
         }
     }
 
@@ -89,35 +90,52 @@ class PALScreen extends Component {
     }
 
     beginGame() {   
+        this.setState({timer: 0});
+        clearInterval(this.state.test);
         let gameStarted = true;
         let level = this.state.levelNum + 1;
         this.setState({test: setInterval(this.updateClock,1000), gameStarted, levelNum: level});
         this.generateRand(gameStarted, level);
     }
     
-    endLevel(gameWon) {
+    validateLvl(correctAnswer, index) {
         this.resetBoxes();
-        this.setState({timer: 0});
-        clearInterval(this.state.test);
+        if(correctAnswer) {
 
-        if(gameWon) {
-            if(this.state.levelNum == 7)
-            {
-                this.setState({gameStarted: false});
-                alert("You win!");                     
+            if(this.state.levelNum == 1) {
+                alert("Next Level");
+                this.beginGame(); 
             }
-            alert("Correct! Next Level");
-            this.beginGame();
-        } 
-        else {alert("Incorrect! Game over.");}
-        this.setState({gameStarted: false});
+            else {
+                if(this.state.levelNum == 7)
+                {
+                    this.setState({gameStarted: false});
+                    alert("You win!");                     
+                }
+                else if(this.state.levelNum-1 > index)
+                {
+                    this.setState({inputIndex: index+1});
+                    this.setState({promptBox: this.state.spriteArray[index+1], promptBoxStart: this.state.timer+1})
+                }
+                else {
+                    alert("Next Level");
+                    this.beginGame();
+                }
+            }
+        }  
+        else {
+            alert("Incorrect! Game over.");
+            this.setState({gameStarted: false});
+        }
+        // this.setState({timer: 0});
+        // clearInterval(this.state.test);
     }
 
     resetBoxes() {
         this.setState({box1: null, box2: null, box3: null, box4: null, box5: null, box6: null});
         this.setState({box1Start: null, box2Start: null, box3Start: null, box4Start: null, box5Start: null, box6Start: null});
         this.setState({box1End: null, box2End: null, box3End: null, box4End: null, box5End: null, box6End: null});
-        this.setState({promptBox: null, promptBoxStart: null});
+        this.setState({promptBox: null, promptBoxStart: null, inputIndex: 0});
     }
 
     // Function to generate random numbers 
@@ -161,9 +179,7 @@ class PALScreen extends Component {
                 }
             }
                
-            if (this.state.levelNum == 0){
-                this.setState({promptBox: this.state.spriteArray[0], promptBoxStart: (this.state.levelNum+3)})
-            }      
+                this.setState({promptBox: this.state.spriteArray[0], promptBoxStart: (this.state.levelNum+3)})    
             
         }
     }
@@ -201,32 +217,31 @@ class PALScreen extends Component {
     // Function to validate user input
     userInput(input) {
         // for (var i=0; i < this.state.level; i++) 
-        // {
-        var i = 0;
+        let i = this.state.inputIndex;
         switch(input) {
                 case 0:
-                    if(this.state.randBoxArray[i] == 0) {this.endLevel(true);i++;}
-                    else{this.endLevel(false);}
+                    if(this.state.randBoxArray[i] == 0) {this.validateLvl(true, i);i++;}
+                    else{this.validateLvl(false, i);}
                 break;
                 case 1:
-                    if(this.state.randBoxArray[i] == 1) {this.endLevel(true);i++;}
-                    else{this.endLevel(false);}
+                    if(this.state.randBoxArray[i] == 1) {this.validateLvl(true, i);i++;}
+                    else{this.validateLvl(false, i);}
                 break;
                 case 2:
-                    if(this.state.randBoxArray[i] == 2) {this.endLevel(true);i++;}
-                    else{this.endLevel(false);}
+                    if(this.state.randBoxArray[i] == 2) {this.validateLvl(true, i);i++;}
+                    else{this.validateLvl(false, i);}
                 break;
                 case 3:
-                    if(this.state.randBoxArray[i] == 3) {this.endLevel(true);i++;}
-                    else{this.endLevel(false);}
+                    if(this.state.randBoxArray[i] == 3) {this.validateLvl(true, i);i++;}
+                    else{this.validateLvl(false, i);}
                 break;
                 case 4:
-                    if(this.state.randBoxArray[i] == 4) {this.endLevel(true);i++;}
-                    else{this.endLevel(false);}
+                    if(this.state.randBoxArray[i] == 4) {this.validateLvl(true, i);i++;}
+                    else{this.validateLvl(false, i);}
                 break;
                 case 5:
-                    if(this.state.randBoxArray[i] == 5) {this.endLevel(true);i++;}
-                    else{this.endLevel(false);}
+                    if(this.state.randBoxArray[i] == 5) {this.validateLvl(true, i);i++;}
+                    else{this.validateLvl(false, i);}
                 break;
             }
         //}
