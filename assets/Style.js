@@ -17,15 +17,16 @@ const styles = StyleSheet.create({
 
   },
   padding: {
-    flex: 1.5, 
+    flex: 1, 
   },  
   titleBox: {
-    flex: 4,
+    flex: 2,
     alignItems: 'center',
+    maxWidth: '100%',
   }, 
   title: {
-    maxWidth: '100%',
-    maxHeight: '100%',
+    maxWidth: 400,
+    maxHeight: 300,
   }, 
   titleText: {
     fontSize: 72, 

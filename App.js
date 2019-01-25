@@ -1,13 +1,11 @@
 /* Home screen / Navigator file */ 
 
 import React from 'react';
-import { TouchableOpacity, View, Text} from 'react-native';
+import {Image, TouchableOpacity, View, Text} from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
-
-import styles from './assets/Style'
-import PALScreen from './screens/PALScreen'
-// import FRScreen from './screens/FRScreen'
-// import OldScreen from './screens/OldScreen'
+import styles from './assets/Style';
+import PALScreen from './screens/PALScreen';
+import PALScreenCustom from './screens/PALScreenCustom';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -24,11 +22,13 @@ class HomeScreen extends React.Component {
 
         {/* Title Section */}
         <View style={[styles.titleBox]}> 
-          <Text style={styles.title}>Memory</Text>
-          <Text style={styles.title}>Assistant</Text>
+          <Image style={styles.title} source={require('./assets/logo.png')}></Image>
+            {/* <Text style={styles.titleText}>Memory Assistant</Text> */}
         </View>
 
         <View style={styles.padding}></View>
+        <View style={styles.padding}></View>
+      
 
         {/* Buttons */}
         <View style={[styles.buttonBox]}>
@@ -38,7 +38,14 @@ class HomeScreen extends React.Component {
                 <Text style={styles.buttonText}> PAL Test </Text> 
                 </TouchableOpacity>     
         </View>
-        
+        <View style={{flex:0.1}}></View>
+        <View style={[styles.buttonBox]}>
+                <TouchableOpacity style={[styles.navButton]}
+                    onPress={() => this.props.navigation.navigate('Custom')}
+              > 
+                <Text style={styles.buttonText}> Custom Test </Text> 
+                </TouchableOpacity>     
+        </View>
         <View style={styles.padding}></View>
       </View> 
     );
@@ -48,9 +55,8 @@ class HomeScreen extends React.Component {
 const AppNavigator = createStackNavigator(
   {
     PAL: PALScreen,
-    // Old: OldScreen,
-    // FR: FRScreen,
     Home: HomeScreen,
+    Custom: PALScreenCustom,
   },
   {
     initialRouteName: 'Home', // Default screen = this one 
