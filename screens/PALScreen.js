@@ -28,48 +28,37 @@ class PALScreen extends Component {
         this.state = {
             // Array to store sprites
             spriteArray: [Sprites.beach, Sprites.bev, Sprites.bikini, 
-                          Sprites.bishop, Sprites.coconut, Sprites.dolphin, Sprites.fish],
+                          Sprites.bishop, Sprites.coconut, Sprites.dolphin], //Sprites.fish],
             
             levelNum: 0, // Control level num 
             timeVar: null, // Control timer 
 
-            /* BOX VARS (Index, startTime, endTime) */
-            box1: null, // Top left  
-            box1Start: null,
-            box1End: null,
+           /* BOX VARS (Index, startTime, endTime) */
+           box1: null, box1Start: null, box1End: null, // Top left  
+            
+           box2: null, box2Start: null, box2End: null, // Top mid 
+           
+           box3: null, box3Start: null, box3End: null, // Top right
+           
+           box4: null, box4Start: null, box4End: null, // Bot left
+           
+           box5: null, box5Start: null, box5End: null,  // Bot mid
+           
+           box6: null, box6Start: null, box6End: null,// Bot right
+           /* End box vars */
 
-            box2: null, // Top mid 
-            box2Start: null,
-            box2End: null,
-
-            box3: null, // Top right
-            box3Start: null,
-            box3End: null,
-
-            box4: null, // Bot left
-            box4Start: null,
-            box4End: null,
-
-            box5: null, // Bot mid
-            box5Start: null,
-            box5End: null,
-
-            box6: null, // Bot right
-            box6Start: null,
-            box6End: null,
-            /* End box vars */
 
             promptBox: null, //Prompt box image
             promptBoxStart: null,
 
-            randBoxArray: [0, 1, 2, 3, 4, 5, 6], // Array for box vars
+            randBoxArray: [0, 1, 2, 3, 4, 5], // Array for box vars
             timer: 0, // timer 
             inputIndex: 0, // To advance user input
         }
     }
 
     // When game starts 
-    componentDidMount() {   
+    componentDidMount() {          
         this.beginGame();
     }
     componentWillUnmount() {
@@ -86,8 +75,10 @@ class PALScreen extends Component {
     beginGame() {   
         this.setState({timer: 0});
         clearInterval(this.state.timeVar);
+        
         let gameStarted = true;
         let level = this.state.levelNum + 1;
+
         this.setState({timeVar: setInterval(this.updateClock,1000), gameStarted, levelNum: level});
         this.generateRand(gameStarted, level);
     }
@@ -137,43 +128,49 @@ class PALScreen extends Component {
         if(gameStarted) {
 
             shuffle(this.state.spriteArray); // randomise order of sprites 
-
-            // Level based random images
             let randBoxArray = [...this.state.randBoxArray];
-
+            for (var i=0; i <= level; i++) 
+            {
+                 shuffle(randBoxArray); // randomise order of boxes  
+                 this.setState({randBoxArray});   
+            }             
+  
+            // Level based random images
             for (var i=0; i < level; i++) 
             {
-                shuffle(randBoxArray); // Set a value for each step in array
-                this.setState({randBoxArray});   
-            }                    
-
-            for (var i=0; i < level; i++) 
-            {
-                let y = i + 2.5;
-            
+                //alert("loop: " + i + " boxNum(1-6): " + randBoxArray[i] + " SpriteNum(0-5): " + this.state.spriteArray[i]);            
+                let y = i + 1;
                 switch (randBoxArray[i]) { 
                     case 0:
-                       this.setState({box1: this.state.spriteArray[i], box1Start: i+1, box1End: y});
+                       this.setState({box1: this.state.spriteArray[i], box1Start: i, box1End: y});
                     break;
                     case 1:
-                        this.setState({box2: this.state.spriteArray[i], box2Start: i+1, box2End: y});
+                        this.setState({box2: this.state.spriteArray[i], box2Start: i, box2End: y});
                     break;
                     case 2:
-                        this.setState({box3: this.state.spriteArray[i], box3Start: i+1, box3End: y});
+                        this.setState({box3: this.state.spriteArray[i], box3Start: i, box3End: y});
                     break;
                     case 3:
-                        this.setState({box4: this.state.spriteArray[i], box4Start: i+1, box4End: y});
+                        this.setState({box4: this.state.spriteArray[i], box4Start: i, box4End: y});
                     break;  
                     case 4:
-                        this.setState({box5: this.state.spriteArray[i], box5Start: i+1, box5End: y});
+                        this.setState({box5: this.state.spriteArray[i], box5Start: i, box5End: y});
                     break;
                     case 5:
-                        this.setState({box6: this.state.spriteArray[i], box6Start: i+1, box6End: y});
+                        this.setState({box6: this.state.spriteArray[i], box6Start: i, box6End: y});
                     break;       
                 }
+                switch (randBoxArray[i]) { 
+                        case 1:
+                        var firstPic = i; // Find the box with lowest start time to set as first prompt pic
+                        break;
+                        case 6: 
+                        var lastPic = i; // find last pic
+                        break
+                }
             }
-               
-                this.setState({promptBox: this.state.spriteArray[0], promptBoxStart: (this.state.levelNum+3)})    
+            
+                this.setState({promptBox: this.state.spriteArray[0], promptBoxStart: (0)})    
             
         }
     }
