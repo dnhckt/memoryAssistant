@@ -6,13 +6,7 @@ import styles from '../assets/Style';
 import ImageFadeView from '../assets/ImageFadeView';
 import PromptFadeView from '../assets/PromptFadeView';
     /*
-    Fix touchable opacity (colour feedback)
-    
-    (Separate function for promptbox where time = total of level times)    
-    
-    Levels - validation against null (not the same) 
-
-    Add user based gallery
+        Screen for the basic PAL Test
     */
 function shuffle(array) {
     var j, x, i;
@@ -37,7 +31,7 @@ class PALScreen extends Component {
                           Sprites.bishop, Sprites.coconut, Sprites.dolphin, Sprites.fish],
             
             levelNum: 0, // Control level num 
-            test: null, // Control timer 
+            timeVar: null, // Control timer 
 
             /* BOX VARS (Index, startTime, endTime) */
             box1: null, // Top left  
@@ -81,7 +75,7 @@ class PALScreen extends Component {
     componentWillUnmount() {
         this.resetBoxes();
         this.setState({timer: 0});
-        clearInterval(this.state.test);
+        clearInterval(this.state.timeVar);
     }
     componentDidUpdate() {
         if(this.state.timer == 5){ 
@@ -91,10 +85,10 @@ class PALScreen extends Component {
 
     beginGame() {   
         this.setState({timer: 0});
-        clearInterval(this.state.test);
+        clearInterval(this.state.timeVar);
         let gameStarted = true;
         let level = this.state.levelNum + 1;
-        this.setState({test: setInterval(this.updateClock,1000), gameStarted, levelNum: level});
+        this.setState({timeVar: setInterval(this.updateClock,1000), gameStarted, levelNum: level});
         this.generateRand(gameStarted, level);
     }
     
@@ -128,7 +122,7 @@ class PALScreen extends Component {
             this.setState({gameStarted: false});
         }
         // this.setState({timer: 0});
-        // clearInterval(this.state.test);
+        // clearInterval(this.state.timeVar);
     }
 
     resetBoxes() {
