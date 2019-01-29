@@ -266,42 +266,42 @@ class PALScreen extends Component {
                 {/*  Game Arena: */}
                 <Grid>
                     <Row>
-                        <Col style={[styles.gameButton]}>
+                        <Col style={[styles.gameButtonCol]}>
         {/* Box 1 */}   
-                            <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(0)}>
+                            <TouchableOpacity style={[styles.gameButton]} onPress={()=>this.userInput(0)}>
                                 {this.renderImg(this.state.box1, this.state.box1Start, this.state.box1End)} 
                             </TouchableOpacity>
                         </Col>
-                        <Col style={[styles.gameButton]}>
+                        <Col style={[styles.gameButtonCol]}>
         {/* Box 2 */}   
-                            <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(1)}>
+                            <TouchableOpacity style={[styles.gameButton]} onPress={()=>this.userInput(1)}>
                                 {this.renderImg(this.state.box2, this.state.box2Start, this.state.box2End)}
                             </TouchableOpacity>
                         </Col>
-                        <Col style={[styles.gameButton]}>
+                        <Col style={[styles.gameButtonCol]}>
         {/* Box 3 */}   
-                            <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(2)}>
+                            <TouchableOpacity style={[styles.gameButton]} onPress={()=>this.userInput(2)}>
                                 {this.renderImg(this.state.box3, this.state.box3Start, this.state.box3End)}
                             </TouchableOpacity>
                         </Col>
                     </Row> 
 
                     <Row>
-                    <Col style={[styles.gameButton]}>
+                    <Col style={[styles.gameButtonCol]}>
         {/* Box 4  */}
-                            <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(3)}>
+                            <TouchableOpacity style={[styles.gameButton]} onPress={()=>this.userInput(3)}>
                                 {this.renderImg(this.state.box4, this.state.box4Start, this.state.box4End)}
                             </TouchableOpacity>
                     </Col>
-                <Col style={[styles.gameButton]}>
+                <Col style={[styles.gameButtonCol]}>
         {/* Box 5  */}
-                            <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(4)}>
+                            <TouchableOpacity style={[styles.gameButton]} onPress={()=>this.userInput(4)}>
                                 {this.renderImg(this.state.box5, this.state.box5Start, this.state.box5End)}
                             </TouchableOpacity>
                     </Col>
-                    <Col style={[styles.gameButton]}>
+                    <Col style={[styles.gameButtonCol]}>
         {/* Box 6  */}
-                           <TouchableOpacity style={[styles.button]} onPress={()=>this.userInput(5)}>
+                           <TouchableOpacity style={[styles.gameButton]} onPress={()=>this.userInput(5)}>
                                 {this.renderImg(this.state.box6, this.state.box6Start, this.state.box6End)}
                             </TouchableOpacity>
                     </Col>
