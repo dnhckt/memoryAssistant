@@ -1,19 +1,28 @@
 import {ImagePicker} from 'expo';
 
 import React, { Component } from "react";
+import Permissions from 'react-native-permissions';
 import {Col, Row, Grid} from "react-native-easy-grid";
 import {Alert, Button, TouchableOpacity, View, Text, Image} from 'react-native';
 
-import styles from '../assets/Style';
+import styles from '../src/Style';
 
-import ImageFadeView from '../assets/ImageFadeView';
-import PromptFadeView from '../assets/PromptFadeView';
+import ImageFadeView from '../src/ImageFadeView';
+import PromptFadeView from '../src/PromptFadeView';
 
 /*
         Screen for the customized PAL Test
 */
 
-function shuffle(array) {
+async function checkMultiPermissions() {
+    const { Permissions } = Expo;
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+    if (status !== 'granted') {
+      alert("Hey! If you're on iPhone/iPad we need Camera Roll permissions for this game!");
+    }
+}
+
+function shuffle(array){
     var j, x, i;
     for (i = array.length - 1; i > 0; i--) {
         j = Math.floor(Math.random() * (i + 1));
@@ -22,7 +31,7 @@ function shuffle(array) {
         array[j] = x;
     }
     return array;
-}
+    }
 
 // Class for the game
 class PALScreen extends Component {
@@ -59,7 +68,7 @@ class PALScreen extends Component {
             promptBox: null, //Prompt box image
             promptBoxStart: null,
 
-            randBoxArray: [0, 1, 2, 3, 4, 5, 6], // Array for box vars
+            randBoxArray: [0, 1, 2, 3, 4, 5], // Array for box vars
             timer: 0, // timer 
             inputIndex: 0, // To advance user input
         }
@@ -85,10 +94,11 @@ class PALScreen extends Component {
          Alert("All pictures selected!");
       }
    }  
-
+    
     // When game starts 
     componentDidMount() {   
-   }
+       checkMultiPermissions();
+    }   
     componentWillUnmount() {
         this.resetBoxes();
         this.setState({timer: 0});
@@ -129,6 +139,7 @@ class PALScreen extends Component {
                 {
                     this.setState({inputIndex: index+1});
                     this.setState({promptBox: this.state.userImgArray[index+1], promptBoxStart: this.state.timer+1})
+                    alert("Correct!");
                 }
                 else {
                     alert("Next Level");

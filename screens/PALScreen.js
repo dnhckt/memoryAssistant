@@ -1,19 +1,18 @@
 import React, { Component } from "react";
 import {Col, Row, Grid} from "react-native-easy-grid";
-import {Alert, TouchableOpacity, View, Text, Image} from 'react-native';
-import Sprites from '../assets/Sprites';
-import styles from '../assets/Style';
-import ImageFadeView from '../assets/ImageFadeView';
-import PromptFadeView from '../assets/PromptFadeView';
-    /*
-        Screen for the basic PAL Test
-        To do:
-            -> Fix timings
-            -> Randomise the prompt images 
-            -> Tutorial? Feedback?
-            
-    */
-function shuffle(array) {
+import {Alert, Button, TouchableOpacity, View, Text, Image} from 'react-native';
+import Sprites from '../src/Sprites';
+import styles from '../src/Style';
+import ImageFadeView from '../src/ImageFadeView';
+import PromptFadeView from '../src/PromptFadeView';
+
+/*
+    Screen for the basic PAL Test
+    To do:
+        -> Randomise the prompt images             
+*/
+
+function shuffle(array){
     var j, x, i;
     for (i = array.length - 1; i > 0; i--) {
         j = Math.floor(Math.random() * (i + 1));
@@ -23,6 +22,7 @@ function shuffle(array) {
     }
     return array;
 }
+
 // Class for the game
 class PALScreen extends Component {
     static navigationOptions = {
@@ -32,11 +32,11 @@ class PALScreen extends Component {
         super(props);
         this.state = {
             // Array to store sprites
-            spriteArray: [Sprites.beach, Sprites.bev, Sprites.bikini, 
+           spriteArray: [Sprites.beach, Sprites.bev, Sprites.bikini, 
                           Sprites.bishop, Sprites.coconut, Sprites.dolphin], //Sprites.fish],
             
-            levelNum: 0, // Control level num 
-            timeVar: null, // Control timer 
+           levelNum: 0, // Control level num 
+           timeVar: null, // Control timer 
 
            /* BOX VARS (Index, startTime, endTime) */
            box1: null, box1Start: null, box1End: null, // Top left  
@@ -59,12 +59,13 @@ class PALScreen extends Component {
             randBoxArray: [0, 1, 2, 3, 4, 5], // Array for box vars
             timer: 0, // timer 
             inputIndex: 0, // To advance user input
+            firstRandPrompt: null,
         }
     }
 
     // When game starts 
-    componentDidMount() {          
-        this.beginGame();1
+    componentDidMount() {     
+        // alert("In this game, wait for the images to flash up. When displayed at the bottom, remember where they were hidden.") 
     }
     componentWillUnmount() {
         this.resetBoxes();
@@ -77,6 +78,12 @@ class PALScreen extends Component {
         }
     }
 
+    beginButton() {
+        if(!this.state.gameStarted) 
+        {
+            this.beginGame();
+        }
+    }
     beginGame() {   
         this.setState({timer: 0});
         clearInterval(this.state.timeVar);
@@ -85,13 +92,12 @@ class PALScreen extends Component {
         let level = this.state.levelNum + 1;
 
         this.setState({timeVar: setInterval(this.updateClock,1000), gameStarted, levelNum: level});
-        this.generateRand(gameStarted, level);
+        this.generateRand(gameStarted, level); 
     }
     
     validateLvl(correctAnswer, index) {
         this.resetBoxes();
         if(correctAnswer) {
-
             if(this.state.levelNum == 1) {
                 alert("Next Level");
                 this.beginGame(); 
@@ -106,6 +112,7 @@ class PALScreen extends Component {
                 {
                     this.setState({inputIndex: index+1});
                     this.setState({promptBox: this.state.spriteArray[index+1], promptBoxStart: this.state.timer+1})
+                    alert("Correct!");
                 }
                 else {
                     alert("Next Level");
@@ -115,7 +122,8 @@ class PALScreen extends Component {
         }  
         else {
             alert("Incorrect! Game over.");
-            this.setState({gameStarted: false});
+            this.setState({gameStarted: false, levelNum: 0});
+            this.resetBoxes();
         }
 
     }
@@ -142,7 +150,7 @@ class PALScreen extends Component {
             // Level based random images
             for (var i=0; i < level; i++) 
             {
-                //alert("loop: " + i + " boxNum(1-6): " + randBoxArray[i] + " SpriteNum(0-5): " + this.state.spriteArray[i]);            
+                // alert("level: " + this.state.levelNum + " index: " + this.state.inputIndex);            
                 let y = i + 1;
                 switch (randBoxArray[i]) { 
                     case 0:
@@ -174,8 +182,13 @@ class PALScreen extends Component {
                 }
             }
             
-                this.setState({promptBox: this.state.spriteArray[0], promptBoxStart: (0)})    
-            
+            // if(level == 1) {}
+            this.setState({promptBox: this.state.spriteArray[0], promptBoxStart: this.state.levelNum+1});    
+            /* Randomise the prompt images */
+            // else {
+            //     this.state.firstRandPrompt =  Math.floor((Math.random() * 5)); 
+            //     this.setState({promptBox: this.state.spriteArray[this.state.firstRandPrompt], promptBoxStart: this.state.box1End+1});    
+            // }
         }
     }
 
@@ -213,6 +226,7 @@ class PALScreen extends Component {
     userInput(input) {
         // for (var i=0; i < this.state.level; i++) 
         let i = this.state.inputIndex;
+        // alert("input: " + i + " randBox 1:  " + this.state.randBoxArray[0]);
         switch(input) {
                 case 0:
                     if(this.state.randBoxArray[i] == 0) {this.validateLvl(true, i);i++;}
@@ -276,7 +290,7 @@ class PALScreen extends Component {
                                 {this.renderImg(this.state.box4, this.state.box4Start, this.state.box4End)}
                             </TouchableOpacity>
                     </Col>
-                <Col style={[styles.gameButtonCol]}>
+                    <Col style={[styles.gameButtonCol]}>
         {/* Box 5  */}
                             <TouchableOpacity style={[styles.gameButton]} onPress={()=>this.userInput(4)}>
                                 {this.renderImg(this.state.box5, this.state.box5Start, this.state.box5End)}
@@ -298,8 +312,12 @@ class PALScreen extends Component {
                         </Col>
                         <Col></Col>
                     </Row>
-                    
-                </Grid> 
+                    <Row style={{flex: 0.5}}>
+                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e', alignContent: 'center'}} onPress={()=>this.beginButton()}>
+                                <Text style={[styles.buttonText]}>Press to Begin!</Text>
+                            </TouchableOpacity>
+                    </Row>                    
+                </Grid>
                 </View>
             </View>
         );
