@@ -305,7 +305,7 @@ class PALScreen extends Component {
                     </Row>
 
                     <Row style={{borderWidth: 1}}>
-                        <Col><Text>{this.state.timer}</Text></Col>
+                        <Col></Col>
                         <Col style={{borderWidth: 5, marginTop: '1%', marginBottom: '1%',}}>
         {/* Prompt Box */}   
                         {this.renderPromptImg(this.state.promptBox, this.state.promptBoxStart)}
@@ -313,7 +313,7 @@ class PALScreen extends Component {
                         <Col></Col>
                     </Row>
                     <Row style={{flex: 0.5}}>
-                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e', alignContent: 'center'}} onPress={()=>this.beginButton()}>
+                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e'}} onPress={()=>this.beginButton()}>
                                 <Text style={[styles.buttonText]}>Press to Begin!</Text>
                             </TouchableOpacity>
                     </Row>                    

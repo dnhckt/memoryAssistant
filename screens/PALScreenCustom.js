@@ -31,7 +31,7 @@ function shuffle(array){
         array[j] = x;
     }
     return array;
-    }
+}
 
 // Class for the game
 class PALScreen extends Component {
@@ -75,25 +75,25 @@ class PALScreen extends Component {
     }
 
     /* Image picker method */
-   pickImage = async () => {
-      let req = this.state.requiredImgs    
-      if(req > 0) {
-         let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            aspect: [4, 3],
-         }); 
-         // Put image in the array
-         let userImgArray = [...this.state.userImgArray];
-         let userImg = {...userImgArray[req-1]};
-         userImg = result;
-         userImgArray[req-1] = userImg;
-         this.setState({userImgArray});
-         this.setState({requiredImgs: this.state.requiredImgs-1});  
-      }  
-      else {
-         Alert("All pictures selected!");
-      }
-   }  
+    pickImage = async () => {
+        let req = this.state.requiredImgs    
+        if(req > 0) {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+            }); 
+            // Put image in the array
+            let userImgArray = [...this.state.userImgArray];
+            let userImg = {...userImgArray[req-1]};
+            userImg = result;
+            userImgArray[req-1] = userImg;
+            this.setState({userImgArray});
+            this.setState({requiredImgs: this.state.requiredImgs-1});  
+        }  
+        else {
+            Alert("All pictures selected!");
+        }
+    }  
     
     // When game starts 
     componentDidMount() {   
@@ -107,7 +107,7 @@ class PALScreen extends Component {
     componentDidUpdate() {
     }
 
-    beginGame=()=> {   
+    beginGame =()=> {   
         if(this.state.requiredImgs == 0) { // If user has selected all images
         this.setState({timer: 0});        
         clearInterval(this.state.timeVar);
@@ -321,10 +321,10 @@ class PALScreen extends Component {
                     <Row style={{borderWidth: 1}}>
                         <Col>    
                            <Button
-                                    title="Pick an image from camera roll"
+                                    title={"Select " + this.state.requiredImgs +  " from your gallery"}
                                     onPress={this.pickImage}
                                  />
-                           <Col><Text>{this.state.requiredImgs}</Text></Col>
+                           {/* <Col><Text style={{fontSize: 72}}>{this.state.requiredImgs}</Text></Col> */}
                         </Col>
                         <Col style={{borderWidth: 5, marginTop: '1%', marginBottom: '1%',}}>
         {/* Prompt Box */}   
@@ -335,10 +335,14 @@ class PALScreen extends Component {
                                     title="Begin Game!"
                                     onPress={this.beginGame}
                                  />
-                           <Col><Text>{this.state.timer}</Text></Col>
+                           {/* <Col><Text>{this.state.timer}</Text></Col> */}
                         </Col>
                     </Row>
-                    
+                    <Row style={{flex: 0.5}}>
+                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e'}} onPress={()=>this.beginButton()}>
+                                <Text style={[styles.buttonText]}>Press to Begin!</Text>
+                            </TouchableOpacity>
+                    </Row>         
                 </Grid> 
                 </View>
             </View>

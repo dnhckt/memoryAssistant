@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     buttonText: {
       fontSize: 46,
       color: paleW,
+      textAlign: 'center'
     }, 
     gameButtonCol: {
           borderWidth: 1, 

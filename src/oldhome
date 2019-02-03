@@ -1,0 +1,39 @@
+        <View style={styles.padding}></View>
+
+        {/* Title Section */}
+        <View style={[styles.titleBox]}> 
+          <Image style={styles.title} source={require('./assets/logo.png')}></Image>
+            {/* <Text style={styles.titleText}>Memory Assistant</Text> */}
+        </View>
+
+        <View style={styles.padding}></View>
+        <View style={styles.padding}></View>
+      
+        {/* Buttons */}
+        <View style={[styles.buttonBox]}>
+                <TouchableOpacity style={[styles.navButton]}
+                    onPress={() => this.props.navigation.navigate('PAL')}
+              > 
+                <Text style={styles.buttonText}> PAL Test </Text> 
+                </TouchableOpacity>     
+        </View>
+        <View style={{flex:0.1}}></View>
+        <View style={[styles.buttonBox]}>
+                <TouchableOpacity style={[styles.navButton]}
+                    onPress={() => this.props.navigation.navigate('Custom')}
+              > 
+                <Text style={styles.buttonText}> Custom PAL </Text> 
+                </TouchableOpacity>     
+        </View>
+        <View style={{flex:0.1}}></View>
+        <View style={[styles.buttonBox]}>
+                <TouchableOpacity style={[styles.navButton]}
+                    onPress={() => this.props.navigation.navigate('FR')}
+              > 
+                <Text style={styles.buttonText}> FR Test </Text> 
+                </TouchableOpacity>     
+        </View>
+        <View style={styles.padding}></View>
+      </View> 
+
+      

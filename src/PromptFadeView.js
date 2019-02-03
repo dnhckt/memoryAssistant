@@ -14,7 +14,7 @@ class PromptFadeView extends React.Component {
             {
               // Set opacity to 1 over 1 second  
               toValue: 1,                
-              duration: 1000,          
+              duration: 100,          
             }
           ).start();                  
     }
@@ -25,7 +25,7 @@ class PromptFadeView extends React.Component {
             {
               // Set opacity to 0 over 1 second
               toValue: 0,                  
-              duration: 1000,             
+              duration: 100,             
             }
           ).start();          
           
