@@ -17,7 +17,7 @@ To-do (Urgent 5, Trivial 1)
 ~~4/5) Add iOS permissions~~
 ~~1/5) Change layout of PAL~~
 ~~1/5) Fish zooming incorrectly~~
-~~3/5) PAL comments¬¬
+~~3/5) PAL comments~~
 
     5/5) Add FR test 
     4/5) Randomise Promptbox validation
