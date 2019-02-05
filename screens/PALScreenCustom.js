@@ -35,7 +35,7 @@ function shuffle(array){
 // Class for the game
 class PALScreen extends Component {
     static navigationOptions = {
-        title: "PAL Test",
+        title: "Custom Picture Match Game",
     }
     constructor(props){
         super(props);
@@ -68,7 +68,11 @@ class PALScreen extends Component {
 
             randBoxArray: [0, 1, 2, 3, 4, 5], // Array for box vars
             timer: 0, // timer 
+
             inputIndex: 0, // To advance user input
+            
+            beginText: "Press to Begin!",
+            selectText: "Pick 6 pics!"
         }
     }
 
@@ -80,13 +84,15 @@ class PALScreen extends Component {
                 allowsEditing: true,
                 aspect: [4, 3],
             }); 
+            
             // Put image in the array
             let userImgArray = [...this.state.userImgArray];
             let userImg = {...userImgArray[req-1]};
             userImg = result;
             userImgArray[req-1] = userImg;
             this.setState({userImgArray});
-            this.setState({requiredImgs: this.state.requiredImgs-1});  
+            let newReqImgs = this.state.requiredImgs-1;
+            this.setState({requiredImgs: newReqImgs, selectText: "Pick " + newReqImgs + " pics!"});  
         }  
         else {
             Alert("All pictures selected!");
@@ -107,15 +113,19 @@ class PALScreen extends Component {
 
     beginGame =()=> {   
         if(this.state.requiredImgs == 0) { // If user has selected all images
-        this.setState({timer: 0});        
-        clearInterval(this.state.timeVar);
-        let gameStarted = true;
-        let level = this.state.levelNum + 1;
-        this.setState({timeVar: setInterval(this.updateClock,1000), gameStarted, levelNum: level});
-        this.generateRand(gameStarted, level);
+
+            this.setState({timer: 0});        
+            this.setState({beginText: this.state.levelNum+1 + " Img(s) Left"});
+            clearInterval(this.state.timeVar);
+
+            let gameStarted = true;
+            let level = this.state.levelNum + 1;
+            
+            this.setState({timeVar: setInterval(this.updateClock,1000), gameStarted, levelNum: level});
+            this.generateRand(gameStarted, level);
         } 
-        else if (this.state.requiredimgs > 0) {
-           alert("Please select 6 images first!");
+        else {
+           alert("Please select your 6 images first using the button above!");
         }
     }
     
@@ -123,6 +133,7 @@ class PALScreen extends Component {
         this.resetBoxes();
         if(correctAnswer) {
 
+            this.setState({beginText: this.state.levelNum-1 + " Img(s) Left"});
             if(this.state.levelNum == 1) {
                 alert("Next Level");
                 this.beginGame(); 
@@ -146,7 +157,7 @@ class PALScreen extends Component {
             }
         }  
         else {
-            alert("Incorrect! Game over.");
+            alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
             this.setState({gameStarted: false});
         }
         // this.setState({timer: 0});
@@ -276,6 +287,11 @@ class PALScreen extends Component {
 
                 {/*  Game Arena: */}
                 <Grid>
+                    <Row style={{flex: 0.5}}>
+                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e'}} onPress={()=>this.pickImage()}>
+                                <Text style={[styles.buttonText]}>{this.state.selectText}</Text>
+                            </TouchableOpacity>
+                    </Row>    
                     <Row>
                         <Col style={[styles.gameButtonCol]}>
         {/* Box 1 */}   
@@ -320,10 +336,11 @@ class PALScreen extends Component {
 
                     <Row style={{borderWidth: 1}}>
                         <Col>    
-                           <Button
-                                    title={"Select " + this.state.requiredImgs +  " from your gallery"}
+                           {/* <Button
+                                    style={[]}
+                                    title={this.state.selectText}
                                     onPress={this.pickImage}
-                                 />
+                                 /> */}
                            {/* <Col><Text style={{fontSize: 72}}>{this.state.requiredImgs}</Text></Col> */}
                         </Col>
                         <Col style={{borderWidth: 5, marginTop: '1%', marginBottom: '1%',}}>
@@ -331,16 +348,16 @@ class PALScreen extends Component {
                         {this.renderPromptImg(this.state.promptBox, this.state.promptBoxStart)}
                         </Col>
                         <Col>
-                           <Button
+                           {/* <Button
                                     title="Begin Game!"
                                     onPress={this.beginGame}
-                                 />
+                                 /> */}
                            {/* <Col><Text>{this.state.timer}</Text></Col> */}
                         </Col>
                     </Row>
                     <Row style={{flex: 0.5}}>
-                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e'}} onPress={()=>this.beginButton()}>
-                                <Text style={[styles.buttonText]}>Press to Begin!</Text>
+                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e'}} onPress={()=>this.beginGame()}>
+                                <Text style={[styles.buttonText]}>{this.state.beginText}</Text>
                             </TouchableOpacity>
                     </Row>         
                 </Grid> 
