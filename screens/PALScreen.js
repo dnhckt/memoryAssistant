@@ -26,7 +26,7 @@ function shuffle(array){
 // Class for the game
 class PALScreen extends Component {
     static navigationOptions = {
-        title: "PAL Test" 
+        title: "Picture Match Game" 
     }
     constructor(props){
         super(props);
@@ -52,7 +52,6 @@ class PALScreen extends Component {
            box6: null, box6Start: null, box6End: null,// Bot right
            /* End box vars */
 
-
             promptBox: null, //Prompt box image
             promptBoxStart: null,
 
@@ -60,7 +59,8 @@ class PALScreen extends Component {
             inputIndex: 0, // To advance user input
             firstRandPrompt: null,
 
-            beginText: "Press to Begin!"
+            beginText: "Press to Begin!",
+            leftCounter: 0
         }
     }
 
@@ -98,10 +98,14 @@ class PALScreen extends Component {
     
     validateLvl(correctAnswer, index) {
         this.resetBoxes();
+        let count = this.state.leftCounter;
         if(correctAnswer) {
-            this.setState({beginText: this.state.levelNum-1 + " Img(s) Left"});
+            count = count + 1;
+            this.setState({leftCounter: count});
+            this.setState({beginText: this.state.levelNum-count + " Img(s) Left"});
             if(this.state.levelNum == 1) {
                 alert("Next Level");
+                this.setState({leftCounter: 0});
                 this.beginGame(); 
             }
             else {
@@ -118,6 +122,7 @@ class PALScreen extends Component {
                 }
                 else {
                     alert("Next Level");
+                    this.setState({leftCounter: 0});
                     this.beginGame();
                 }
             }
@@ -226,7 +231,7 @@ class PALScreen extends Component {
 
     // Function to validate user input
     userInput(input) {
-        if(this.state.timer > this.state.promptBoxStart+1) // Prevent too soon input
+        if(this.state.timer > this.state.promptBoxStart+0.1) // Prevent too soon input
         {
             let i = this.state.inputIndex;
             switch(input) {
