@@ -60,7 +60,7 @@ class PALScreen extends Component {
             firstRandPrompt: null,
 
             beginText: "Press to Begin!",
-            leftCounter: 0
+            leftCounter: 0, // To display images left
         }
     }
 
@@ -103,6 +103,7 @@ class PALScreen extends Component {
             count = count + 1;
             this.setState({leftCounter: count});
             this.setState({beginText: this.state.levelNum-count + " Img(s) Left"});
+
             if(this.state.levelNum == 1) {
                 alert("Next Level");
                 this.setState({leftCounter: 0});
@@ -139,7 +140,7 @@ class PALScreen extends Component {
         this.setState({box1: null, box2: null, box3: null, box4: null, box5: null, box6: null});
         this.setState({box1Start: null, box2Start: null, box3Start: null, box4Start: null, box5Start: null, box6Start: null});
         this.setState({box1End: null, box2End: null, box3End: null, box4End: null, box5End: null, box6End: null});
-        this.setState({promptBox: null, promptBoxStart: null, inputIndex: 0});
+        this.setState({promptBox: null, promptBoxStart: null, inputIndex: 0, beginText: "Press To Begin!"});
     }
 
     // Function to generate random numbers 
@@ -231,7 +232,7 @@ class PALScreen extends Component {
 
     // Function to validate user input
     userInput(input) {
-        if(this.state.timer > this.state.promptBoxStart+0.1) // Prevent too soon input
+        if(this.state.timer > this.state.promptBoxStart+0.5) // Prevent too soon input with half second delay
         {
             let i = this.state.inputIndex;
             switch(input) {
