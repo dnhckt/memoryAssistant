@@ -26,7 +26,7 @@ function shuffle(array){
 // Class for the game
 class PALScreen extends Component {
     static navigationOptions = {
-        title: "PAL Test",
+        title: "PAL Test" 
     }
     constructor(props){
         super(props);
@@ -34,9 +34,9 @@ class PALScreen extends Component {
             // Array to store sprites
            spriteArray: [Sprites.beach, Sprites.bev, Sprites.bikini, 
                           Sprites.bishop, Sprites.coconut, Sprites.dolphin], //Sprites.fish],
-            
            levelNum: 0, // Control level num 
            timeVar: null, // Control timer 
+           timer: 0, // timer 
 
            /* BOX VARS (Index, startTime, endTime) */
            box1: null, box1Start: null, box1End: null, // Top left  
@@ -57,9 +57,10 @@ class PALScreen extends Component {
             promptBoxStart: null,
 
             randBoxArray: [0, 1, 2, 3, 4, 5], // Array for box vars
-            timer: 0, // timer 
             inputIndex: 0, // To advance user input
             firstRandPrompt: null,
+
+            beginText: "Press to Begin!"
         }
     }
 
@@ -79,13 +80,13 @@ class PALScreen extends Component {
     }
 
     beginButton() {
-        if(!this.state.gameStarted) 
-        {
+        if(!this.state.gameStarted) {
             this.beginGame();
         }
     }
     beginGame() {   
         this.setState({timer: 0});
+        this.setState({beginText: this.state.levelNum+1 + " Img(s) Left"});
         clearInterval(this.state.timeVar);
         
         let gameStarted = true;
@@ -98,6 +99,7 @@ class PALScreen extends Component {
     validateLvl(correctAnswer, index) {
         this.resetBoxes();
         if(correctAnswer) {
+            this.setState({beginText: this.state.levelNum-1 + " Img(s) Left"});
             if(this.state.levelNum == 1) {
                 alert("Next Level");
                 this.beginGame(); 
@@ -121,8 +123,8 @@ class PALScreen extends Component {
             }
         }  
         else {
-            alert("Incorrect! Game over.");
-            this.setState({gameStarted: false, levelNum: 0});
+            alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
+            this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!"});
             this.resetBoxes();
         }
 
@@ -224,36 +226,36 @@ class PALScreen extends Component {
 
     // Function to validate user input
     userInput(input) {
-        // for (var i=0; i < this.state.level; i++) 
-        let i = this.state.inputIndex;
-        // alert("input: " + i + " randBox 1:  " + this.state.randBoxArray[0]);
-        switch(input) {
-                case 0:
-                    if(this.state.randBoxArray[i] == 0) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-                case 1:
-                    if(this.state.randBoxArray[i] == 1) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-                case 2:
-                    if(this.state.randBoxArray[i] == 2) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-                case 3:
-                    if(this.state.randBoxArray[i] == 3) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-                case 4:
-                    if(this.state.randBoxArray[i] == 4) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-                case 5:
-                    if(this.state.randBoxArray[i] == 5) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-            }
-        //}
+        if(this.state.timer > this.state.promptBoxStart+1) // Prevent too soon input
+        {
+            let i = this.state.inputIndex;
+            switch(input) {
+                    case 0:
+                        if(this.state.randBoxArray[i] == 0) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                    case 1:
+                        if(this.state.randBoxArray[i] == 1) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                    case 2:
+                        if(this.state.randBoxArray[i] == 2) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                    case 3:
+                        if(this.state.randBoxArray[i] == 3) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                    case 4:
+                        if(this.state.randBoxArray[i] == 4) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                    case 5:
+                        if(this.state.randBoxArray[i] == 5) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                }
+        }
     }
     render() {
         return (
@@ -314,7 +316,7 @@ class PALScreen extends Component {
                     </Row>
                     <Row style={{flex: 0.5}}>
                             <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e'}} onPress={()=>this.beginButton()}>
-                                <Text style={[styles.buttonText]}>Press to Begin!</Text>
+                                <Text style={[styles.buttonText]}>{this.state.beginText}</Text>
                             </TouchableOpacity>
                     </Row>                    
                 </Grid>

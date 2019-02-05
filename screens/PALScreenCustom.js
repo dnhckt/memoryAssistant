@@ -1,7 +1,6 @@
 import {ImagePicker} from 'expo';
 
 import React, { Component } from "react";
-import Permissions from 'react-native-permissions';
 import {Col, Row, Grid} from "react-native-easy-grid";
 import {Alert, Button, TouchableOpacity, View, Text, Image} from 'react-native';
 
@@ -44,7 +43,6 @@ class PALScreen extends Component {
             // Image selection vars
             userImg1: null, userImg2: null, userImg3: null, userImg4: null, userImg5: null, userImg6: null,
             requiredImgs: 6,
-
             // Array to store user images
             userImgArray: [],
 
@@ -240,34 +238,36 @@ class PALScreen extends Component {
 
     // Function to validate user input
     userInput(input) {
-        // for (var i=0; i < this.state.level; i++) 
-        let i = this.state.inputIndex;
-        switch(input) {
-                case 0:
-                    if(this.state.randBoxArray[i] == 0) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-                case 1:
-                    if(this.state.randBoxArray[i] == 1) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-                case 2:
-                    if(this.state.randBoxArray[i] == 2) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-                case 3:
-                    if(this.state.randBoxArray[i] == 3) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-                case 4:
-                    if(this.state.randBoxArray[i] == 4) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-                case 5:
-                    if(this.state.randBoxArray[i] == 5) {this.validateLvl(true, i);i++;}
-                    else{this.validateLvl(false, i);}
-                break;
-            }
+        if(this.state.timer > this.state.promptBoxStart+1) // Prevent too soon input
+        {
+            let i = this.state.inputIndex;
+            switch(input) {
+                    case 0:
+                        if(this.state.randBoxArray[i] == 0) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                    case 1:
+                        if(this.state.randBoxArray[i] == 1) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                    case 2:
+                        if(this.state.randBoxArray[i] == 2) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                    case 3:
+                        if(this.state.randBoxArray[i] == 3) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                    case 4:
+                        if(this.state.randBoxArray[i] == 4) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                    case 5:
+                        if(this.state.randBoxArray[i] == 5) {this.validateLvl(true, i);i++;}
+                        else{this.validateLvl(false, i);}
+                    break;
+                }
+        }
     }
     render() {
         return (
