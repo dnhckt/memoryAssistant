@@ -70,7 +70,8 @@ class PALScreen extends Component {
             timer: 0, // timer 
 
             inputIndex: 0, // To advance user input
-            
+            leftCounter: 0, // To display images left
+
             beginText: "Press to Begin!",
             selectText: "Pick 6 pics!"
         }
@@ -88,12 +89,21 @@ class PALScreen extends Component {
             // Put image in the array
             let userImgArray = [...this.state.userImgArray];
             let userImg = {...userImgArray[req-1]};
+            
             userImg = result;
             userImgArray[req-1] = userImg;
+            
             this.setState({userImgArray});
             let newReqImgs = this.state.requiredImgs-1;
-            this.setState({requiredImgs: newReqImgs, selectText: "Pick " + newReqImgs + " pics!"});  
-        }  
+
+            if(newReqImgs == 0) {  
+                this.setState({requiredImgs: newReqImgs, selectText: "Ready To Go!"})
+            }
+            else {
+                this.setState({requiredImgs: newReqImgs, selectText: "Pick " + newReqImgs + " pics!"});
+            }
+
+            }  
         else {
             Alert("All pictures selected!");
         }
@@ -115,7 +125,7 @@ class PALScreen extends Component {
         if(this.state.requiredImgs == 0) { // If user has selected all images
 
             this.setState({timer: 0});        
-            this.setState({beginText: this.state.levelNum+1 + " Img(s) Left"});
+            this.setState({beginText: this.state.levelNum+1 + " Img(s) Left", selectText: this.state.levelNum+1 + " Img(s) Left"});
             clearInterval(this.state.timeVar);
 
             let gameStarted = true;
@@ -131,11 +141,14 @@ class PALScreen extends Component {
     
     validateLvl(correctAnswer, index) {
         this.resetBoxes();
+        let count = this.state.leftCounter;
         if(correctAnswer) {
-
-            this.setState({beginText: this.state.levelNum-1 + " Img(s) Left"});
+            count = count + 1;
+            this.setState({leftCounter: count});
+            this.setState({beginText: this.state.levelNum-count + " Img(s) Left"});
             if(this.state.levelNum == 1) {
                 alert("Next Level");
+                this.setState({leftCounter: 0});
                 this.beginGame(); 
             }
             else {
@@ -152,13 +165,15 @@ class PALScreen extends Component {
                 }
                 else {
                     alert("Next Level");
+                    this.setState({leftCounter: 0});
                     this.beginGame();
                 }
             }
         }  
         else {
             alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
-            this.setState({gameStarted: false});
+            this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!", selectText: "Pick 6 Pics!"});
+            this.resetBoxes();
         }
         // this.setState({timer: 0});
         // clearInterval(this.state.timeVar);
