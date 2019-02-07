@@ -73,7 +73,7 @@ class PALScreen extends Component {
             leftCounter: 0, // To display images left
 
             beginText: "Press to Begin!",
-            selectText: "Pick 6 pics!"
+            selectText: "Pick 6 Photos!"
         }
     }
 
@@ -100,12 +100,12 @@ class PALScreen extends Component {
                 this.setState({requiredImgs: newReqImgs, selectText: "Ready To Go!"})
             }
             else {
-                this.setState({requiredImgs: newReqImgs, selectText: "Pick " + newReqImgs + " pics!"});
+                this.setState({requiredImgs: newReqImgs, selectText: "Pick " + newReqImgs + " photos!"});
             }
 
             }  
         else {
-            Alert("All pictures selected!");
+            Alert("All photos selected!");
         }
     }  
     
@@ -172,7 +172,7 @@ class PALScreen extends Component {
         }  
         else {
             alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
-            this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!", selectText: "Pick 6 Pics!"});
+            this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!", selectText: "Pick 6 Photos!"});
             this.resetBoxes();
         }
         // this.setState({timer: 0});
@@ -244,7 +244,7 @@ class PALScreen extends Component {
                 startTime = {startTime}
                 endTime = {endTime}
                 >
-                    <Image style={{maxHeight: '100%', maxWidth: '100%'}} source={img}></Image>
+                    <Image style={{maxHeight: '100%', maxWidth: '100%', borderRadius: 50}} source={img}></Image>
                 </ImageFadeView>   
             );
         }
@@ -264,7 +264,7 @@ class PALScreen extends Component {
 
     // Function to validate user input
     userInput(input) {
-        if(this.state.timer > this.state.promptBoxStart+1) // Prevent too soon input
+        if(this.state.timer > this.state.promptBoxStart+0.5) // Prevent too soon input with half second delay
         {
             let i = this.state.inputIndex;
             switch(input) {
@@ -303,7 +303,7 @@ class PALScreen extends Component {
                 {/*  Game Arena: */}
                 <Grid>
                     <Row style={{flex: 0.5}}>
-                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e'}} onPress={()=>this.pickImage()}>
+                            <TouchableOpacity style={{ width: '100%', backgroundColor: '#34495e', justifyContent: "center" }} onPress={()=>this.pickImage()}>
                                 <Text style={[styles.buttonText]}>{this.state.selectText}</Text>
                             </TouchableOpacity>
                     </Row>    
@@ -371,7 +371,7 @@ class PALScreen extends Component {
                         </Col>
                     </Row>
                     <Row style={{flex: 0.5}}>
-                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e'}} onPress={()=>this.beginGame()}>
+                            <TouchableOpacity style={{ width: '100%', backgroundColor: '#34495e', justifyContent: "center" }} onPress={()=>this.beginGame()}>
                                 <Text style={[styles.buttonText]}>{this.state.beginText}</Text>
                             </TouchableOpacity>
                     </Row>         

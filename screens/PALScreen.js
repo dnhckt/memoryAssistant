@@ -212,7 +212,7 @@ class PALScreen extends Component {
                 startTime = {startTime}
                 endTime = {endTime}
                 >
-                    <Image style={{maxHeight: '100%', maxWidth: '100%'}} source={img}></Image>
+                    <Image style={{maxHeight: '100%', maxWidth: '100%', borderRadius: 50}} source={img}></Image>
                 </ImageFadeView>   
             );
         }
@@ -321,7 +321,7 @@ class PALScreen extends Component {
                         <Col></Col>
                     </Row>
                     <Row style={{flex: 0.5}}>
-                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e'}} onPress={()=>this.beginButton()}>
+                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e', justifyContent: "center"}} onPress={()=>this.beginButton()}>
                                 <Text style={[styles.buttonText]}>{this.state.beginText}</Text>
                             </TouchableOpacity>
                     </Row>                    

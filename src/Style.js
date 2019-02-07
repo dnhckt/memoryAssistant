@@ -1,13 +1,15 @@
-import {StyleSheet} from 'react-native';
-const beige = '#ebd4a8'
-const brown = '#5b4b49'
-const gry = '#f3f3f3'
+import {StyleSheet, Dimensions} from 'react-native';
 
-const pnk = '#dd99bb'
-const mint = '#5dd39e'
+const gry = '#edecee'
 const navy = '#34495e'
-const ligblu = '#00b2fa'
 const paleW = '#f5f6f1'
+
+const mint = '#5dd39e'
+const softred = '#e64850'
+
+const ligblu = '#00b2fa'
+const pnk = '#dd99bb'
+
 
 const styles = StyleSheet.create({
   container: {
@@ -40,23 +42,23 @@ const styles = StyleSheet.create({
   navButton: {
       alignItems: 'center',
       backgroundColor: navy,
-      padding: 10,
+      padding: "5%",
       borderRadius: 50,
   }, 
 
     buttonText: {
       fontSize: 46,
       color: paleW,
-      textAlign: 'center'
+      textAlign: 'center',
+      alignItems: "center"
     }, 
     gameButtonCol: {
-          borderWidth: 1, 
-          // backgroundColor: 'orange',
     }, 
     gameButton: {
       height: "100%",
       borderColor: navy,
       borderWidth: 3,
+      borderRadius: 50,
     }, 
     max: {
       height: '100%',
@@ -67,7 +69,37 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     color: navy,
     paddingBottom: '10%',
-  }
+  },
+    FRYesButton: {
+      backgroundColor: mint,
+      alignItems: 'center',
+      height: Dimensions.get('window').width * 0.33,
+      width: Dimensions.get('window').width * 0.33,
+      borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 3
+    },
+    FRNoButton: {
+      alignItems: 'center',
+      backgroundColor: softred,
+      height: Dimensions.get('window').width * 0.33,
+      width: Dimensions.get('window').width * 0.33,
+      borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 3
+  },
+  FRThumbUp: {
+    marginTop: "5%",
+    height: "75%",
+    width: "75%",
+  },
+  FRThumbDown: {
+    marginTop: "20%",
+    height: "75%",
+    width: "75%",
+    transform:([{rotateZ: '180deg'}]),
+  },
+  bingoButton: {
+      height: "100%",
+      borderColor: navy,
+      borderWidth: 3,
+  },
 });
 
 export default styles;

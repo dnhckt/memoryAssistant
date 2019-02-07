@@ -1,18 +1,19 @@
-import {ImagePicker} from 'expo';
-
 import React, { Component } from "react";
-import ImageFadeView from '../src/ImageFadeView';
-import {Col, Row, Grid} from "react-native-easy-grid";
-import {Alert, Button, TouchableOpacity, View, Text, Image} from 'react-native';
+import { Alert, Button, TouchableOpacity, View, Text, Image } from 'react-native';
 
+import {ImagePicker} from 'expo';
+import { Col, Row, Grid } from "react-native-easy-grid";
+
+import PromptFadeView from '../src/PromptFadeView';
+import BingoFadeView from '../src/BingoFadeView';
 import styles from '../src/Style';
 
 /*
-        Screen for the FR Test
         Randomly pick a subset
-        Display for 10 seconds
-        Display set one by one 
+        Display 1 by 1 
         Validate input 
+        Sort layout 
+        FIx begin button
         Display score
 */
 
@@ -36,7 +37,7 @@ class FRScreen extends Component {
     constructor(props){
         super(props);
         this.state = { 
-                bingoCard: [],
+                bingoCard: ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
                 randomWords: [
                     "burial",
                     "pump",
@@ -60,41 +61,68 @@ class FRScreen extends Component {
                     "family",
                 ],
                 timer: null,
+
+                thumb: require('../assets/thumbIcon/thumb.png'),
         }
     }
 
     // When game starts 
     componentDidMount() {   
-        this.setState({timeVar: setInterval(this.updateClock,1000)});
+        let bingoCard = [...this.state.bingoCard];
+        let randomWords = [...this.state.randomWords];
+        this.setState({ timeVar: setInterval(this.updateClock, 1000), bingoCard: randomWords });
         
     }
     componentWillUnmount() {
     }
     componentDidUpdate() {
-    
     }
     beginGame=()=> {   
     }
 
-    
-    validateLvl(correctAnswer, index) {
-  
+    validateLvl(correctAnswer, index) {  
     }
 
     updateClock=()=> {
         this.setState({timer: this.state.timer + 1}) // Stores clock second var as timer 
     }
 
-    // Function to fade in image with timer
-    renderImg(startTime, endTime) {
+    // Function to fade in card with timer
+    renderCard(startTime) {
         if(this.state.timer > startTime) {
             return( 
-                <ImageFadeView style={{}}
+                <BingoFadeView style={{height: "100%", width: "100%", fontSize: 76, alignContent: "center", justifyContent: "center" }}
                 startTime = {startTime}
-                endTime = {endTime}
                 >
-                <Text>Bingo</Text>
-                </ImageFadeView>   
+                    <Row>
+                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[3]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[4]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[5]}</Text></Col>
+                    </Row>
+                    <Row>
+                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[0]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[1]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[2]}</Text></Col>
+                    </Row>
+                    <Row>
+                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[6]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[7]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[8]}</Text></Col>
+                    </Row>
+                </BingoFadeView>   
+            );
+        }
+    }
+    renderWord(startTime) {
+        if(this.state.timer > startTime) {
+            return (
+                <PromptFadeView
+                    style={{height: "100%", width: "100%", fontSize: 76, alignContent: "center", justifyContent: "center" }}
+                    startTime={startTime}
+                >
+                <Text style={{fontSize:72}}>{this.state.randomWords[0]}</Text>
+                    <Row style={{}}></Row>
+                </PromptFadeView>
             );
         }
     }
@@ -104,18 +132,37 @@ class FRScreen extends Component {
                 <View style={styles.max}>
 
                 {/*  Game Arena: */}
-                <Grid>
+                <Grid>  
+                
                     <Row style={{flex: 2}}>
-                        <Col style={[styles.gameButton]}>     
-                           <Col><Text>{this.state.bingoCard}{this.state.timer}</Text></Col>
-                        </Col>
+                        <Row style={{flex: 0.1}}></Row>
+                            <Row>
+                                <Col>     
+                                    {this.renderWord(3)}
+                                    {this.renderCard(0)}
+                                </Col>
+                            </Row>
+                        <Row style={{ flex: 0.1 }}></Row>
                     </Row>
-                    <Row>
-                        <Col><TouchableOpacity style={[styles.gameButton]} onPress={()=>this.beginGame()}></TouchableOpacity></Col>
-                        <Col><TouchableOpacity style={[styles.gameButton]} onPress={()=>this.beginGame()}></TouchableOpacity></Col>
-                        <Col><TouchableOpacity style={[styles.gameButton]} onPress={()=>this.beginGame()}></TouchableOpacity></Col>
+                
+                    <Row style={{alignContent: "center", alignItems: "center"}}>
+                        <Col style={{flex: 0.4}}></Col>
+                        <Col><TouchableOpacity style={[styles.FRYesButton]} onPress={()=>this.beginGame()}>
+                                            <Image source={require('../assets/thumbIcon/thumb.png')} style={[styles.FRThumbUp]}></Image>
+                                    </TouchableOpacity></Col>
+                            <Col></Col>
+                        <Col><TouchableOpacity style={[styles.FRNoButton]} onPress={()=>this.beginGame()}>
+                                <Image source={require('../assets/thumbIcon/thumb.png')} style={[styles.FRThumbDown]}></Image>
+                                    </TouchableOpacity></Col>
+                        <Col style={{flex: 0.8}}></Col>
                     </Row>
-                    
+
+                    <Row style={{flex: 0.5}}>
+                        <TouchableOpacity style={{ width: '100%', backgroundColor: '#34495e' }} onPress={() => this.renderImg()}>
+                            <Text style={[styles.buttonText]}>{this.state.selectText}</Text>
+                        </TouchableOpacity>
+                    </Row>
+                
                 </Grid> 
                 </View>
             </View>
