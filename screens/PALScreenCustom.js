@@ -120,9 +120,14 @@ class PALScreen extends Component {
     }
     componentDidUpdate() {
     }
-
+    // To prevent begin button leak
+    beginButton() {
+        if(!this.state.gameStarted) {
+            this.beginGame();
+        }
+    }
     beginGame =()=> {   
-        if(this.state.requiredImgs == 0) { // If user has selected all images
+        if(this.state.requiredImgs == 0 { // If user has selected all images
 
             this.setState({timer: 0});        
             this.setState({beginText: this.state.levelNum+1 + " Img(s) Left", selectText: this.state.levelNum+1 + " Img(s) Left"});
@@ -371,7 +376,7 @@ class PALScreen extends Component {
                         </Col>
                     </Row>
                     <Row style={{flex: 0.5}}>
-                            <TouchableOpacity style={{ width: '100%', backgroundColor: '#34495e', justifyContent: "center" }} onPress={()=>this.beginGame()}>
+                            <TouchableOpacity style={{ width: '100%', backgroundColor: '#34495e', justifyContent: "center" }} onPress={()=>this.beginButton()}>
                                 <Text style={[styles.buttonText]}>{this.state.beginText}</Text>
                             </TouchableOpacity>
                     </Row>         
