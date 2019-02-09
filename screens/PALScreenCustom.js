@@ -73,7 +73,7 @@ class PALScreen extends Component {
             leftCounter: 0, // To display images left
 
             beginText: "Press to Begin!",
-            selectText: "Pick 6 Photos!"
+            selectText: "Pick 6 Photos"
         }
     }
 
@@ -98,9 +98,10 @@ class PALScreen extends Component {
 
             if(newReqImgs == 0) {  
                 this.setState({requiredImgs: newReqImgs, selectText: "Ready To Go!"})
+
             }
             else {
-                this.setState({requiredImgs: newReqImgs, selectText: "Pick " + newReqImgs + " photos!"});
+                this.setState({requiredImgs: newReqImgs, selectText: "Pick " + newReqImgs + " photos"});
             }
 
             }  
@@ -127,7 +128,7 @@ class PALScreen extends Component {
         }
     }
     beginGame =()=> {   
-        if(this.state.requiredImgs == 0 { // If user has selected all images
+        if(this.state.requiredImgs == 0) { // If user has selected all images
 
             this.setState({timer: 0});        
             this.setState({beginText: this.state.levelNum+1 + " Img(s) Left", selectText: this.state.levelNum+1 + " Img(s) Left"});
@@ -177,7 +178,7 @@ class PALScreen extends Component {
         }  
         else {
             alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
-            this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!", selectText: "Pick 6 Photos!"});
+            this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!", selectText: "Pick 6 Photos"});
             this.resetBoxes();
         }
         // this.setState({timer: 0});
@@ -254,14 +255,14 @@ class PALScreen extends Component {
             );
         }
     }
-    // Function to display prompt
+    // Function to display prompt ready to press
     renderPromptImg(img, startTime) {
         if(this.state.timer > startTime) {
             return( 
                 <PromptFadeView 
                 startTime = {startTime}
                 >
-                    <Image style={{height: '100%', width: '100%'}} source={img}></Image>
+                    <Image style={{height: '100%', width: '100%', borderRadius: 20}} source={img}></Image>
                 </PromptFadeView>   
             );
         }
@@ -307,11 +308,13 @@ class PALScreen extends Component {
 
                 {/*  Game Arena: */}
                 <Grid>
-                    <Row style={{flex: 0.5}}>
-                            <TouchableOpacity style={{ width: '100%', backgroundColor: '#34495e', justifyContent: "center" }} onPress={()=>this.pickImage()}>
-                                <Text style={[styles.buttonText]}>{this.state.selectText}</Text>
-                            </TouchableOpacity>
-                    </Row>    
+                        <Row style={{ flex: 0.05 }}></Row>
+                        <Row style={[styles.roundedButtonWrap]}>
+                                <TouchableOpacity style={[styles.roundedButton]} onPress={()=>this.pickImage()}>
+                                    <Text style={[styles.buttonText]}>{this.state.selectText}</Text>
+                                </TouchableOpacity>
+                        </Row>    
+                    <Row style={{flex: 0.05}}></Row>
                     <Row>
                         <Col style={[styles.gameButtonCol]}>
         {/* Box 1 */}   
@@ -354,7 +357,7 @@ class PALScreen extends Component {
                     </Col>
                     </Row>
 
-                    <Row style={{borderWidth: 1}}>
+                    <Row style={{}}>
                         <Col>    
                            {/* <Button
                                     style={[]}
@@ -363,7 +366,7 @@ class PALScreen extends Component {
                                  /> */}
                            {/* <Col><Text style={{fontSize: 72}}>{this.state.requiredImgs}</Text></Col> */}
                         </Col>
-                        <Col style={{borderWidth: 5, marginTop: '1%', marginBottom: '1%',}}>
+                        <Col style={{borderWidth: 5, marginTop: '1%', marginBottom: '1%', borderRadius: 20}}>
         {/* Prompt Box */}   
                         {this.renderPromptImg(this.state.promptBox, this.state.promptBoxStart)}
                         </Col>
@@ -375,11 +378,12 @@ class PALScreen extends Component {
                            {/* <Col><Text>{this.state.timer}</Text></Col> */}
                         </Col>
                     </Row>
-                    <Row style={{flex: 0.5}}>
-                            <TouchableOpacity style={{ width: '100%', backgroundColor: '#34495e', justifyContent: "center" }} onPress={()=>this.beginButton()}>
+                        <Row style={[styles.roundedButtonWrap]}>
+                            <TouchableOpacity style={[styles.roundedButton]} onPress={() => this.beginButton()}>
                                 <Text style={[styles.buttonText]}>{this.state.beginText}</Text>
                             </TouchableOpacity>
-                    </Row>         
+                        </Row>
+                        <Row style={{ flex: 0.05 }}></Row>
                 </Grid> 
                 </View>
             </View>

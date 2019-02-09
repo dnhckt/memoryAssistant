@@ -79,6 +79,7 @@ class PALScreen extends Component {
         }
     }
 
+    // To prevent begin button leak
     beginButton() {
         if(!this.state.gameStarted) {
             this.beginGame();
@@ -129,7 +130,7 @@ class PALScreen extends Component {
             }
         }  
         else {
-            alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
+            alert("Game over.\n\n\n          You made it to level " + this.state.levelNum + "!");
             this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!"});
             this.resetBoxes();
         }
@@ -212,7 +213,7 @@ class PALScreen extends Component {
                 startTime = {startTime}
                 endTime = {endTime}
                 >
-                    <Image style={{maxHeight: '100%', maxWidth: '100%', borderRadius: 50}} source={img}></Image>
+                    <Image style={{maxHeight: '100%', maxWidth: '100%'}} source={img}></Image>
                 </ImageFadeView>   
             );
         }
@@ -224,7 +225,7 @@ class PALScreen extends Component {
                 <PromptFadeView 
                 startTime = {startTime}
                 >
-                    <Image style={{height: '100%', width: '100%'}} source={img}></Image>
+                    <Image style={{ height: '100%', width: '100%', borderRadius: 20}} source={img}></Image>
                 </PromptFadeView>   
             );
         }
@@ -312,19 +313,22 @@ class PALScreen extends Component {
                     </Col>
                     </Row>
 
-                    <Row style={{borderWidth: 1}}>
-                        <Col></Col>
-                        <Col style={{borderWidth: 5, marginTop: '1%', marginBottom: '1%',}}>
+                    <Row style={{}}>
+                        <Col>
+                        </Col>
+                        <Col style={{borderWidth: 5, marginTop: '1%', marginBottom: '1%', borderRadius: 20}}>
         {/* Prompt Box */}   
                         {this.renderPromptImg(this.state.promptBox, this.state.promptBoxStart)}
                         </Col>
-                        <Col></Col>
+                        <Col>
+                    </Col>
                     </Row>
-                    <Row style={{flex: 0.5}}>
-                            <TouchableOpacity style={{width: '100%', backgroundColor: '#34495e', justifyContent: "center"}} onPress={()=>this.beginButton()}>
+                    <Row style={[styles.roundedButtonWrap]}>
+                            <TouchableOpacity style={[styles.roundedButton]} onPress={()=>this.beginButton()}>
                                 <Text style={[styles.buttonText]}>{this.state.beginText}</Text>
                             </TouchableOpacity>
                     </Row>                    
+                    <Row style={{flex: 0.05}}></Row>
                 </Grid>
                 </View>
             </View>
