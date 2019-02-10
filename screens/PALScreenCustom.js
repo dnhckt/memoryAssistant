@@ -153,7 +153,7 @@ class PALScreen extends Component {
             this.setState({leftCounter: count});
             this.setState({beginText: this.state.levelNum-count + " Img(s) Left"});
             if(this.state.levelNum == 1) {
-                alert("Next Level");
+                // alert("Next Level");
                 this.setState({leftCounter: 0});
                 this.beginGame(); 
             }
@@ -167,10 +167,10 @@ class PALScreen extends Component {
                 {
                     this.setState({inputIndex: index+1});
                     this.setState({promptBox: this.state.userImgArray[index+1], promptBoxStart: this.state.timer+1})
-                    alert("Correct!");
+                    // alert("Correct!");
                 }
                 else {
-                    alert("Next Level");
+                    // alert("Next Level");
                     this.setState({leftCounter: 0});
                     this.beginGame();
                 }

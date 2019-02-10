@@ -40,10 +40,14 @@ class ImageFadeView extends React.Component {
       this.fadeIn();
       this.setState({timeVar: setInterval(this.updateClock, 1000)});
     }
+    componentWillUnmount() {
+      clearInterval(this.state.timeVar);
+      this.setState({timer: null});
+    }
 
     // When component updates, fade out 
     componentDidUpdate() {
-      if(this.state.timer > 1)
+      if(this.state.timer > 5)
         this.fadeOut();
     }
 

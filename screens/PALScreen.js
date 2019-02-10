@@ -106,7 +106,7 @@ class PALScreen extends Component {
             this.setState({beginText: this.state.levelNum-count + " Img(s) Left"});
 
             if(this.state.levelNum == 1) {
-                alert("Next Level");
+                // alert("Next Level");
                 this.setState({leftCounter: 0});
                 this.beginGame(); 
             }
@@ -120,10 +120,10 @@ class PALScreen extends Component {
                 {
                     this.setState({inputIndex: index+1});
                     this.setState({promptBox: this.state.spriteArray[index+1], promptBoxStart: this.state.timer+1})
-                    alert("Correct!");
+                    // alert("Correct!");
                 }
                 else {
-                    alert("Next Level");
+                    // alert("Next Level");
                     this.setState({leftCounter: 0});
                     this.beginGame();
                 }
@@ -136,6 +136,7 @@ class PALScreen extends Component {
         }
 
     }
+    
 
     resetBoxes() {
         this.setState({box1: null, box2: null, box3: null, box4: null, box5: null, box6: null});

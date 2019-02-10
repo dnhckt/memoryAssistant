@@ -8,14 +8,6 @@ import PromptFadeView from '../src/PromptFadeView';
 import BingoFadeView from '../src/BingoFadeView';
 import styles from '../src/Style';
 
-/*
-        Randomly pick a subset DONE
-        Display 1 by 1 DONE 
-        Validate input  + fix timings 
-        Sort layout  
-        FIx begin button
-        Display score
-*/
 
 function shuffle(array){
     var j, x, i;
@@ -35,125 +27,142 @@ class FRScreen extends Component {
     constructor(props){
         super(props);
         this.state = { 
+                gameStarted: false,
                 bingoCard: [""],
                 randSet: [""],
                 randomWords: [
-                    "burial",
-                    "pump",
-                    "peanut",
-                    "engine",
-                    "go",
-                    "wear",
-                    "fashion",
-                    "elbow",
-                    "error",
-                    "digital",
-                    "harmful",
-                    "dialect",
-                    "dorm",
-                    "complication",
-                    "crusade",
-                    "skate",
-                    "patient",
-                    "swear",
-                    "researcher",
-                    "family",
+                    "burial", "pump", "peanut", "engine","go", "wear", "fashion",
+                    "elbow", "error", "digital", "harmful", "dialect", "dorm",
+                    "complication", "crusade", "skate", "patient", "swear",
+                    "researcher", "family", "plot", "wood",  "filter",
+                    "feather", "period", "rugby", "borrow", "integrity", 
+                    "topple", "layout", "corruption", "art", "prevent", 
+                    "flash", "thread", "praise", "opposite", "hear", 
+                    "team", "tail", "auction", "call", "found", 
+                    "balance", "neutral", "benevolent", "nostalgic", "bed",                     
+                    "pizza", "decorative", "sunshine", "tropical", "beach", 
                 ],
-                randSet: [],
-                timer: null,
 
-                randPromptCount: 6,
+                randPromptCount: 16,
+                bingoCardLen: null,
+                bingoCardFound: 0,
+                wrongGuess: 0,
 
                 thumb: require('../assets/thumbIcon/thumb.png'),
+                beginText: "Press to Begin!",
+                timer: null,
         }
     }
-
-    // When game starts 
-    componentDidMount() {   
-        this.beginGame();
+ 
+    componentDidUpdate() {   
     }
+
+    componentWillUnmount() {
+        clearInterval(this.state.timeVar);
+        this.resetVars();
+    }
+
     updateClock = () => {
         this.setState({ timer: this.state.timer + 1 }) // Stores clock second var as timer 
     }
+    beginButton() {
+        if(!this.state.gameStarted) {
+            this.beginGame();
+        }
+    }
     beginGame=()=> {
+        this.setState({gameStarted: true});
 
-        let bC = [...this.state.bingoCard];
-        let rW = [...this.state.randomWords];
-        let rS = [...this.state.randSet];
+        let bC = [...this.state.bingoCard]; // For user to remember
+        let rW = [...this.state.randomWords]; // Overall 'deck' of words
+        let rS = [...this.state.randSet]; // To test user
+        var len = 8;
 
-        shuffle(rW);
-        for (var i = 0; i <= 2; i++) {
-            bC[i] = rW[i];
+        shuffle(rW); // Randomise wordbank 
+        for (var i = 0; i <= len; i++) {
+            bC[i] = rW[i]; // Assign user "bingo card" (words to remember)
         }
-        shuffle(rW);
+        shuffle(rW); // Randomise again 
 
-        for (var i=0; i <=5; i++) {
-            if( i <=2) { rS[i] = bC[i]; }
-            if(i > 2) {rS[i] = rW[i]; }
+        for (var i=0; i <=(len*2); i++) {
+            if( i <= len) { rS[i] = bC[i]; } // Assign words from bingocard 
+            if(i > len) {rS[i] = rW[i]; } // Assign some random ones
         }
-        shuffle(rS);
+        shuffle(rS); // Randomise order 
+
         this.setState({ bingoCard: bC, randomWords: rW, randSet: rS});
-
-        // /* Randomise the array of words */
-        // for (var i = 0; i < randomWords.length; i++) {
-        //     shuffle(randomWords); 
-        //     this.setState({ bingoCard: randomWords[0] });  /* Assign a random subset of words to bingoCard */
-        //     // this.setState{bingoCard}   
+        this.setState({ bingoCardLen: len});
 
         /* Begin clock */
         this.setState({ timeVar: setInterval(this.updateClock, 1000)});           
-
-        this.generateRandom();                 
-    }
-    componentWillUnmount() {
-        clearInterval(this.state.timeVar);
-        this.setState({timer: null, randomWords: null, bingoCard: null, randPrompt: null, randSet: null});
+        this.generateRandom();      
     }
 
     /* 0 = no, 1 = yes*/
     validateLvl(ans) {
-        let currentWord = this.state.randSet[this.state.randPromptCount];
+        if(this.state.gameStarted){
+            let currentWord = this.state.randSet[this.state.randPromptCount];
+            let bingoCard = [...this.state.bingoCard];
 
-        let bingoCard = [...this.state.bingoCard];
-        let randomWords = [...this.state.randomWords];        
+            let len = this.state.bingoCardLen;
+            var count = 0;
 
-        var count = 0;
-        /* Check if user pressed no correctly */
-         if(ans == 0) {
-            for(i=0; i <= 2; i++) {
-                if  (currentWord != bingoCard[i]) {
-                    count++;
+            /* Check if user pressed no correctly */
+            if(ans == 0) {
+                for(i=0; i <= len; i++) {
+                    if  (currentWord != bingoCard[i]) {
+                        count++;
+                    }
+                }
+                if (count == len) { // If user said no and they're correct
+                    alert("Correct!");
+                }
+                else { // If user said no and they're wrong 
+                    alert("Wrong!");
+                    this.setState({wrongGuess: this.state.wrongGuess + 1});
                 }
             }
-            if (count == 3) { // If user said no and they're correct
-                alert("Yes, it wasn't");
-                this.generateRandom();
-            }
-            else { // If user said no and they're wrong 
-                alert("No, it was in");
-            }
-        }
 
-       /* Check if user pressed yes correctly */
-        if (ans==1) {
-            for(i=0; i <=2; i++) {
-                if (currentWord == bingoCard[i]) { 
-                    count++;
+            /* Check if user pressed yes correctly */
+                if (ans==1) {
+                    for(i=0; i <= len; i++) {
+                        if (currentWord == bingoCard[i]) { 
+                            count++;
+                        }
+                    }
+                    if(count == 1) { // If user said yes and they're correct 
+                        alert("Correct!");
+                        this.setState({bingoCardFound: this.state.bingoCardFound + 1});
+                    }
+                    else { // If user said yes and they're wrong
+                        alert("Wrong!");
+                        this.setState({wrongGuess: this.state.wrongGuess + 1});
+                    }
                 }
-            }
-            if(count==1) { // If user said yes and they're correct 
-                alert("Yes, it was ");
-                this.generateRandom();
-            }
-            else { // If user said yes and they're wrong
-                alert("No, it wasn't");
-            }
+                if(this.state.wrongGuess < 3) {
+                    this.generateRandom();
+                }    
+                else {
+                    alert("You lose!");
+                    this.resetVars();
+                }
         }
-
     }
-
     generateRandom() {
             this.setState({randPromptCount: this.state.randPromptCount-1});
+            if (this.state.randBoxPromptCount == 0) {
+                alert("YOU WIN!");
+                this.resetVars();
+            }
+    }
+
+    resetVars() {
+        this.setState({
+            timer: null, gameStarted: false, bingoCard: 0, randSet: 0,
+            randPromptCount: 16, bingoCardLen: null, 
+            bingoCardFound: 0, wrongGuess: 0,     
+            beginText: "Press to Begin!",
+        });
     }
 
     // Function to fade in card with timer
@@ -164,21 +173,21 @@ class FRScreen extends Component {
                 startTime = {startTime}
                 >
                     <Row style={{ flex: 0.05 }}></Row>
-                    {/* <Row>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 48 }}>{this.state.randSet[0]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 48 }}>{this.state.randSet[1]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 48 }}>{this.state.randSet[2]}</Text></Col> 
-                    </Row> */}
                     <Row>
-                        <Col style={[styles.bingoButton]}><Text style={{fontSize: 48}}>{this.state.bingoCard[0]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 48 }}>{this.state.bingoCard[1]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 48 }}>{this.state.bingoCard[2]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[3]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[4]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[5]}</Text></Col> 
+                    </Row> 
+                    <Row>
+                        <Col style={[styles.bingoButton]}><Text style={{fontSize: 24}}>{this.state.bingoCard[0]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[1]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[2]}</Text></Col>
                     </Row>
-                     {/* <Row>
-                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[6]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[7]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text>{this.state.bingoCard[8]}</Text></Col>
-                    </Row> */}
+                   <Row>
+                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[6]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[7]}</Text></Col>
+                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[8]}</Text></Col>
+                    </Row>
                 </BingoFadeView>   
             );
         }
@@ -190,6 +199,8 @@ class FRScreen extends Component {
                     style={{height: "100%", width: "100%", fontSize: 76, alignContent: "center", justifyContent: "center" }}
                     startTime={startTime}
                 >
+                <Text style={{fontSize:24}}>Words found: {this.state.bingoCardFound}/{this.state.bingoCard.length}</Text>
+                <Text style={{ fontSize: 24 }}>Wrong Guesses: {this.state.wrongGuess}</Text>
                 <Text style={{fontSize:72}}>{this.state.randSet[this.state.randPromptCount]}</Text>
                     <Row style={{}}></Row>
                 </PromptFadeView>
@@ -208,7 +219,7 @@ class FRScreen extends Component {
                         <Row style={{flex: 0.1}}></Row>
                             <Row>
                                 <Col>     
-                                    {this.renderWord(3)}
+                                    {this.renderWord(6)}
                                     {this.renderCard(0)}
                                 </Col>
                             </Row>
@@ -229,8 +240,8 @@ class FRScreen extends Component {
                     </Row>
 
                     <Row style={[styles.roundedButtonWrap]}>
-                        <TouchableOpacity style={[styles.roundedButton]} onPress={() => this.renderImg()}>
-                            <Text style={[styles.buttonText]}>{this.state.selectText}</Text>
+                        <TouchableOpacity style={[styles.roundedButton]} onPress={() => this.beginButton()}>
+                            <Text style={[styles.buttonText]}>{this.state.beginText}</Text>
                         </TouchableOpacity>
                     </Row>
                 <Row style={{flex: 0.05}}></Row>

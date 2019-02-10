@@ -43,33 +43,41 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: navy,
       padding: "5%",
-      borderRadius: 50,
+      borderRadius: 20,
   }, 
-
     buttonText: {
       fontSize: 46,
       color: paleW,
       textAlign: 'center',
       alignItems: "center"
     }, 
-    gameButtonCol: {
-    }, 
     gameButton: {
       height: "100%",
       borderColor: navy,
       borderWidth: 3,
-      borderRadius: 50,
     }, 
     max: {
       height: '100%',
       width: '100%',
   },  
    header: {
-    fontSize: 36,
+    fontSize: 42,
     textDecorationLine: 'underline',
     color: navy,
     paddingBottom: '10%',
   },
+    roundedButtonWrap: {
+      flex: 0.5, 
+      marginRight: "2%", 
+      marginLeft: "2%",
+       alignContent: "center",
+    },  
+    roundedButton: {
+      width: '100%', 
+      backgroundColor: '#34495e',
+       justifyContent: "center", 
+       borderRadius: 20,
+    },
     FRYesButton: {
       backgroundColor: mint,
       alignItems: 'center',
@@ -98,6 +106,7 @@ const styles = StyleSheet.create({
   bingoButton: {
       height: "100%",
       borderColor: navy,
+      justifyContent: "center",
       borderWidth: 3,
   },
 });

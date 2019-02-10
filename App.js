@@ -30,6 +30,7 @@ class HomeScreen extends React.Component {
           </Row>
           <Row></Row>
     {/* Top row buttons */}
+          <Row style={{ flex: 0.25 }}></Row>
           <Row>
             <Col style={[styles.buttonBox]}>
             <Text style={[styles.header]}>Group 1</Text>
@@ -47,6 +48,7 @@ class HomeScreen extends React.Component {
             </Col>
           </Row>
     {/* Second row buttons */}
+          <Row style={{ flex: 0.25 }}></Row>
           <Row>
             <Col style={[styles.buttonBox]}>
     {/* FR Test */}
