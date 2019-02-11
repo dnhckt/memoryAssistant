@@ -143,7 +143,7 @@ class FRScreen extends Component {
                     this.generateRandom();
                 }    
                 else {
-                    alert("You lose!");
+                    alert("You lose! you got " + this.state.bingoCardFound + " right!" );
                     this.resetVars();
                 }
         }

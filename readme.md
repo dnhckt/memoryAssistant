@@ -22,7 +22,7 @@ To-do (Urgent 5, Trivial 1)
 
    
     4/5) Randomise Promptbox validation
-    4/5) Clean up FR Layout 
+    4/5) Clean up FR Layout + feedback
     4/5) Speed up custom picture selection
     4/5) Select photo > back?
     3/5) Ready to go > error 
@@ -32,6 +32,7 @@ To-do (Urgent 5, Trivial 1)
     1/5) Add MA to logo?
     1/5) Increase text size of MA label
     1/5) "Find this" pointing to prompt img 
+
 
     
 
