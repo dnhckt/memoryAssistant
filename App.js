@@ -9,8 +9,10 @@ import styles from './src/Style';
 import PALScreen from './screens/PALScreen';
 import PALScreenCustom from './screens/PALScreenCustom';
 import FRScreen from './screens/FRScreen';
+import FRScreenCustom from './screens/FRScreenCustom';
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
+import FRScreenCustom from './screens/FRScreenCustom';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -58,7 +60,7 @@ class HomeScreen extends React.Component {
             </Col>
     {/* Custom FR Test */}
             <Col style={[styles.buttonBox]}>
-              <TouchableOpacity style={[styles.navButton]} onPress={() => this.props.navigation.navigate('FR')}>
+              <TouchableOpacity style={[styles.navButton]} onPress={() => this.props.navigation.navigate('cFR')}>
                 <Text style={styles.buttonText}>Game B</Text>
               </TouchableOpacity>
             </Col>
@@ -74,6 +76,7 @@ const AppNavigator = createStackNavigator(
     PAL: PALScreen,
     cPAL: PALScreenCustom,
     FR: FRScreen, 
+    cFR: FRScreenCustom,
     Home: HomeScreen,
     
   },
