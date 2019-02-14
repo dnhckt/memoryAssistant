@@ -24,7 +24,7 @@ To-do (Urgent 5, Trivial 1)
     4/5) Randomise Promptbox validation
     4/5) Clean up FR Layout + feedback
     4/5) Speed up custom picture selection
-    4/5) Select photo > back?
+    3/5) Prevent early pressing in FR
     3/5) Ready to go > error 
    3/5) Add media queries
     3/5) Add help section?
