@@ -109,9 +109,11 @@ class FRScreen extends Component {
 
             /* Check if user pressed no correctly */
             if(ans == 0) {
-                for(i=0; i <= len; i++) {
+                for(i=0; i < len; i++) {
                     if  (currentWord != bingoCard[i]) {
                         count++;
+                        console.log(i);
+                        console.log(count);
                     }
                 }
                 if (count == len) { // If user said no and they're correct
