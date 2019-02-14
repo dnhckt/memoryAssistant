@@ -85,33 +85,33 @@ class PALScreen extends Component {
                 allowsEditing: true,
                 aspect: [4, 3],
             }); 
-            
-            // Put image in the array
-            let userImgArray = [...this.state.userImgArray];
-            let userImg = {...userImgArray[req-1]};
-            
-            userImg = result;
-            userImgArray[req-1] = userImg;
-            
-            this.setState({userImgArray});
-            let newReqImgs = this.state.requiredImgs-1;
 
-            if(newReqImgs == 0) {  
-                this.setState({requiredImgs: newReqImgs, selectText: "Ready To Go!"})
-
-            }
-            else {
-                this.setState({requiredImgs: newReqImgs, selectText: "Pick " + newReqImgs + " photos"});
-            }
-
-            }  
-        else {
-            Alert("All photos selected!");
+            if (!result.cancelled) {
+                    // Put image in the array
+                    let userImgArray = [...this.state.userImgArray];
+                    let userImg = {...userImgArray[req-1]};
+                    
+                    userImg = result;
+                    userImgArray[req-1] = userImg;
+                    
+                    this.setState({userImgArray});
+                    let newReqImgs = this.state.requiredImgs-1;
+                    
+                    if(newReqImgs == 0) {  
+                        this.setState({requiredImgs: newReqImgs, selectText: "Ready To Go!"})
+                    }
+                    else {
+                        this.setState({requiredImgs: newReqImgs, selectText: "Pick " + newReqImgs + " photos"});
+                    }
+                }
+                else if (result.cancelled) {
+                    alert("Please make sure you press 'crop' and not 'back' to select a picture!");
+                }             
         }
-    }  
+}  
     
     // When game starts 
-    componentDidMount() {   
+    componentDidMount(){   
        checkMultiPermissions();
     }   
     componentWillUnmount() {
