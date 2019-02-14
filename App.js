@@ -12,7 +12,6 @@ import FRScreen from './screens/FRScreen';
 import FRScreenCustom from './screens/FRScreenCustom';
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import FRScreenCustom from './screens/FRScreenCustom';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -30,9 +29,9 @@ class HomeScreen extends React.Component {
               {/* <Text style={styles.titleText}>Memory Assistant</Text> */}
             </View>
           </Row>
-          <Row></Row>
+          <Row style={{flex: 0.75}}></Row>
     {/* Top row buttons */}
-          <Row style={{ flex: 0.25 }}></Row>
+                  <Row style={{ flex: 0.25 }}></Row>
           <Row>
             <Col style={[styles.buttonBox]}>
             <Text style={[styles.header]}>Group 1</Text>
@@ -49,8 +48,8 @@ class HomeScreen extends React.Component {
               </TouchableOpacity>
             </Col>
           </Row>
+          <Row style={{flex: 0.5}}></Row>
     {/* Second row buttons */}
-          <Row style={{ flex: 0.25 }}></Row>
           <Row>
             <Col style={[styles.buttonBox]}>
     {/* FR Test */}
