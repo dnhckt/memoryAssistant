@@ -100,7 +100,7 @@ class FRScreen extends Component {
 
     /* 0 = no, 1 = yes*/
     validateLvl(ans) {
-        if(this.state.gameStarted){
+        if(this.state.gameStarted && this.state.timer > 6){
             let currentWord = this.state.randSet[this.state.randPromptCount];
             let bingoCard = [...this.state.bingoCard];
 
