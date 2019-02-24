@@ -74,7 +74,7 @@ class PALScreen extends Component {
             inputIndex: 0, // To advance user input
             leftCounter: 0, // To display images left
 
-            beginText: "Let's Begin!",
+            beginText: "Press To Begin!",
             selectText: "Pick 6 Photos"
         }
     }
@@ -181,7 +181,7 @@ class PALScreen extends Component {
         }
         else {
             alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
-            this.setState({ gameStarted: false, levelNum: 0, beginText: "Press to Begin!", selectText: "Pick 6 Photos" });
+            this.setState({ gameStarted: false, levelNum: 0, selectText: this.state.beginText });
             this.resetBoxes();
         }
         // this.setState({timer: 0});
