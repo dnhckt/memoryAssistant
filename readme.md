@@ -1,13 +1,16 @@
 Memory Assistant
 ========================================
 App developed by Aidan Hackett for Final Year Project.
-Project title: Apps for memory training in older users.
+    
+    Project title: Apps for memory training in older users.
 
 The app contains two versions of two memory tests/games, essentially creating four games.
+        
         Game A - Paired Associate Learning Test (Picture Match)
         Game B -  Free Recall & Recognition of Words Test (Word Bingo)     
     
 These are varied by user group:
+        
         Group 1 (Neutral/Generic Content)
         Group 2 (Personally Relevant Content)
 
