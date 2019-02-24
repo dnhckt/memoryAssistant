@@ -12,13 +12,13 @@ import PromptFadeView from '../src/PromptFadeView';
         -> Randomise the prompt images             
 */
 
-function shuffle(array){
-    var j, x, i;
-    for (i = array.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = array[i];
-        array[i] = array[j];
-        array[j] = x;
+function shuffleContents(array){
+    var x, y, z;
+    for (x = array.length - 1; x > 0; x--) {
+        y = Math.floor(Math.random() * (x+1));
+        z = array[x];
+        array[x] = array[y];
+        array[y] = z; 
     }
     return array;
 }
@@ -33,7 +33,9 @@ class PALScreen extends Component {
         this.state = {
             // Array to store sprites
            spriteArray: [Sprites.beach, Sprites.bev, Sprites.bikini, 
-                          Sprites.bishop, Sprites.coconut, Sprites.dolphin], //Sprites.fish],
+                               Sprites.bishop, Sprites.coconut, Sprites.dolphin,
+                               Sprites.man, Sprites.woman, Sprites.tiki, Sprites.necklace,
+                               Sprites.harbour, Sprites.pineapple, Sprites.volcano], 
            levelNum: 0, // Control level num 
            timeVar: null, // Control timer 
            timer: 0, // timer 
@@ -149,11 +151,11 @@ class PALScreen extends Component {
     generateRand(gameStarted,level) {
         if(gameStarted) {
 
-            shuffle(this.state.spriteArray); // randomise order of sprites 
+            shuffleContents(this.state.spriteArray); // randomise order of sprites 
             let randBoxArray = [...this.state.randBoxArray];
             for (var i=0; i <= level; i++) 
             {
-                 shuffle(randBoxArray); // randomise order of boxes  
+                 shuffleContents(randBoxArray); // randomise order of boxes  
                  this.setState({randBoxArray});   
             }             
   
