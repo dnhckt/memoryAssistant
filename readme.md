@@ -15,7 +15,9 @@ This app was created as part of an experimental study.
 
 App Structure
 === 
-App.js - Home screen. This page links to the four games.
+   
+    App.js
+        Home screen. This page links to the four games.
 
     screens
         PALScreen.js - The generic version of the picture match game.
@@ -34,7 +36,7 @@ App.js - Home screen. This page links to the four games.
         thumbIcon - Contains the thumb icon used in the word bingo game.
         logo - Contains all logo icons (splash screen, app home screen, user device)
 
-app.json, babel.config.js, package-lock.json, package.json - Configuration files 
+    app.json, babel.config.js, package-lock.json, package.json - Configuration files 
 
 To-do (Urgent 5, Trivial 1)
 ======
@@ -43,7 +45,7 @@ To-do (Urgent 5, Trivial 1)
 ~~5/5) Fix up custom testing~~ 
 ~~4/5) Add iOS permissions~~
 ~~1/5) Change layout of PAL~~
-~~ 2/5) Change layout of PALCustom ~~ 
+~~2/5) Change layout of PALCustom~~ 
 ~~1/5) Fish zooming incorrectly~~
 ~~3/5) PAL comments~~
 ~~5/5) Fix FR test~~
