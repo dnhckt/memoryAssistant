@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Alert, Button, TouchableOpacity, View, Text, Image } from 'react-native';
-
-import {ImagePicker} from 'expo';
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 import PromptFadeView from '../src/PromptFadeView';
@@ -9,16 +7,16 @@ import BingoFadeView from '../src/BingoFadeView';
 import styles from '../src/Style';
 
 
-function shuffle(array){
-    var j, x, i;
-    for (i = array.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = array[i];
-        array[i] = array[j];
-        array[j] = x;
+function shuffleContents(array) {
+    var x, y, z;
+    for (x = array.length - 1; x > 0; x--) {
+        y = Math.floor(Math.random() * (x + 1));
+        z = array[x];
+        array[x] = array[y];
+        array[y] = z;
     }
     return array;
-    }
+}
 
 class FRScreen extends Component {
     static navigationOptions = {
@@ -58,7 +56,6 @@ class FRScreen extends Component {
     }
 
     componentWillUnmount() {
-        clearInterval(this.state.timeVar);
         this.resetVars();
     }
 
@@ -78,17 +75,17 @@ class FRScreen extends Component {
         let rS = [...this.state.randSet]; // To test user
         var len = 8;
 
-        shuffle(rW); // Randomise wordbank 
+        shuffleContents(rW); // Randomise wordbank 
         for (var i = 0; i <= len; i++) {
             bC[i] = rW[i]; // Assign user "bingo card" (words to remember)
         }
-        shuffle(rW); // Randomise again 
+        shuffleContents(rW); // Randomise again 
 
         for (var i=0; i <=(len*2); i++) {
             if( i <= len) { rS[i] = bC[i]; } // Assign words from bingocard 
             if(i > len) {rS[i] = rW[i]; } // Assign some random ones
         }
-        shuffle(rS); // Randomise order 
+        shuffleContents(rS); // Randomise order 
 
         this.setState({ bingoCard: bC, randomWords: rW, randSet: rS});
         this.setState({ bingoCardLen: len});
@@ -112,8 +109,6 @@ class FRScreen extends Component {
                 for(i=0; i < len; i++) {
                     if  (currentWord != bingoCard[i]) {
                         count++;
-                        console.log(i);
-                        console.log(count);
                     }
                 }
                 if (count == len) { // If user said no and they're correct
@@ -159,6 +154,7 @@ class FRScreen extends Component {
     }
 
     resetVars() {
+        clearInterval(this.state.timeVar);
         this.setState({
             timer: null, gameStarted: false, bingoCard: 0, randSet: 0,
             randPromptCount: 16, bingoCardLen: null, 
