@@ -1,6 +1,9 @@
 Author credits
 ==========
 
+'logo' Icons made with Hatchful by Shopify: 
+https://hatchful.shopify.com/ 
+
 'thumb.png' Icon made by SmashIcons from www.flaticon.com:
 https://www.flaticon.com/authors/smashicon
 
