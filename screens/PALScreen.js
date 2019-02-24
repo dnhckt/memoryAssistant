@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import {Col, Row, Grid} from "react-native-easy-grid";
 import {Alert, Button, TouchableOpacity, View, Text, Image} from 'react-native';
+
 import Sprites from '../src/Sprites';
 import styles from '../src/Style';
 import ImageFadeView from '../src/ImageFadeView';
 import PromptFadeView from '../src/PromptFadeView';
 
+
 /*
     Screen for the basic PAL Test
-    To do:
-        -> Randomise the prompt images             
 */
 
 function shuffleContents(array){
@@ -319,7 +319,7 @@ class PALScreen extends Component {
                     <Row style={{}}>
                         <Col>
                         </Col>
-                        <Col style={{borderWidth: 5, marginTop: '1%', marginBottom: '1%', borderRadius: 20}}>
+                            <Col style={{ borderWidth: 5, borderColor: '#34495e', marginTop: '1%', marginBottom: '1%', borderRadius: 20}}>
         {/* Prompt Box */}   
                         {this.renderPromptImg(this.state.promptBox, this.state.promptBoxStart)}
                         </Col>

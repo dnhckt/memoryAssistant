@@ -19,36 +19,48 @@ class HomeScreen extends React.Component {
   }
   render() {
     return (
+
       /* Layout of home screen */
       <View style={styles.container}>       
         <Grid>
+          <Row style={{flex: 0.25}}></Row>
           <Row>
   {/* Title image */}
             <View style={[styles.titleBox]}> 
-              <Image style={styles.title} source={require('./assets/logo.png')}></Image>
+              <Image style={styles.title} source={require('./assets/logo/logo.png')}></Image>
               {/* <Text style={styles.titleText}>Memory Assistant</Text> */}
             </View>
           </Row>
-          <Row style={{flex: 0.75}}></Row>
+
+          <Row style={{flex: 2}}></Row>
+
     {/* Top row buttons */}
-                  <Row style={{ flex: 0.25 }}></Row>
-          <Row>
+          <Row style={[styles.menuTitleRow]}>
             <Col style={[styles.buttonBox]}>
             <Text style={[styles.header]}>Group 1</Text>
+            </Col>
+            <Col style={[styles.buttonBox]}>
+              <Text style={[styles.header]}>Group 2</Text>
+            </Col>
+          </Row>
+          <Row style={{flex: 0.5}}></Row>
     {/* PAL test */}
+        <Row>
+            <Col style={[styles.buttonBox]}>
               <TouchableOpacity style={[styles.navButton]} onPress={() => this.props.navigation.navigate('PAL')}>
                 <Text style={styles.buttonText}>Game A</Text>
               </TouchableOpacity>
             </Col>
             <Col style={[styles.buttonBox]}>
-            <Text style={[styles.header]}>Group 2</Text>
     {/* Custom PAL Test */}
               <TouchableOpacity style={[styles.navButton]} onPress={() => this.props.navigation.navigate('cPAL')}>
                 <Text style={styles.buttonText}>Game A</Text>
               </TouchableOpacity>
             </Col>
-          </Row>
-          <Row style={{flex: 0.5}}></Row>
+        </Row>
+
+        <Row style={{flex: 0.1}}></Row>
+
     {/* Second row buttons */}
           <Row>
             <Col style={[styles.buttonBox]}>
@@ -64,6 +76,7 @@ class HomeScreen extends React.Component {
               </TouchableOpacity>
             </Col>
           </Row>
+
         </Grid>
       </View> 
     );
@@ -77,7 +90,6 @@ const AppNavigator = createStackNavigator(
     FR: FRScreen, 
     cFR: FRScreenCustom,
     Home: HomeScreen,
-    
   },
   {
     initialRouteName: 'Home', // Default screen = this one 

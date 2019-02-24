@@ -74,7 +74,7 @@ class PALScreen extends Component {
             inputIndex: 0, // To advance user input
             leftCounter: 0, // To display images left
 
-            beginText: "Press To Begin!",
+            beginText: "Press to Begin!",
             selectText: "Pick 6 Photos"
         }
     }
@@ -181,7 +181,7 @@ class PALScreen extends Component {
         }
         else {
             alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
-            this.setState({ gameStarted: false, levelNum: 0, selectText: this.state.beginText });
+            this.setState({ gameStarted: false, levelNum: 0, selectText: "Press to Begin!" });
             this.resetBoxes();
         }
         // this.setState({timer: 0});
@@ -263,7 +263,7 @@ class PALScreen extends Component {
                 <PromptFadeView
                     startTime={startTime}
                 >
-                    <Image style={{ height: '100%', width: '100%', borderRadius: 15 }} source={img}></Image>
+                    <Image style={{ height: '98%', width: '100%', borderRadius: 20 }} source={img}></Image>
                 </PromptFadeView>
             );
         }
@@ -360,7 +360,7 @@ class PALScreen extends Component {
                                  /> */}
                                 {/* <Col><Text style={{fontSize: 72}}>{this.state.requiredImgs}</Text></Col> */}
                             </Col>
-                            <Col style={{ borderWidth: 5, marginTop: '1%', marginBottom: '1%', borderRadius: 20 }}>
+                            <Col style={{ borderWidth: 5, borderColor: '#34495e',  marginTop: '1%', marginBottom: '1%', borderRadius: 20 }}>
                                 {/* Prompt Box */}
                                 {this.renderPromptImg(this.state.promptBox, this.state.promptBoxStart)}
                             </Col>

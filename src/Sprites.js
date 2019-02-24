@@ -13,10 +13,6 @@ const Sprites = {
         harbour: require('../assets/hawaiiSprites/png/016-harbour.png'),
         pineapple:  require('../assets/hawaiiSprites/png/018-pineapple.png'),
         volcano: require('../assets/hawaiiSprites/png/028-volcano.png'),
-
-
-
-
 };
 
 export default Sprites;

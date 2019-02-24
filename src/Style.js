@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   titleBox: {
     flex: 2,
     alignItems: 'center',
-    maxWidth: '100%',
+    width: '100%',
   }, 
   title: {
     maxWidth: 400,
@@ -37,8 +37,18 @@ const styles = StyleSheet.create({
   buttonBox: {
       width: '80%',
       alignItems: 'center',
-      textAlign: 'center'
+      textAlign: 'center',
+      height: '50%',
     }, 
+    menuTitleRow: {
+      borderColor: navy,
+      borderBottomWidth: 3,
+      borderRadius: 20,
+      alignContent: 'center',
+      flex: 0.7,
+      marginLeft: '5%',
+      marginRight: '5%'
+    },
   navButton: {
       alignItems: 'center',
       backgroundColor: navy,
@@ -51,7 +61,7 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       alignItems: "center"
     }, 
-    gameButton: {
+      gameButton: {
       height: "100%",
       borderColor: navy,
       borderWidth: 3,
@@ -61,10 +71,10 @@ const styles = StyleSheet.create({
       width: '100%',
   },  
    header: {
-    fontSize: 42,
-    textDecorationLine: 'underline',
+    fontSize: 1 * Dimensions.get('window').width * 0.1,
+    // textDecorationLine: 'underline',
+    fontWeight:  'bold',
     color: navy,
-    paddingBottom: '10%',
   },
     roundedButtonWrap: {
       flex: 0.5, 
