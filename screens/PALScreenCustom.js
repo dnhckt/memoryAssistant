@@ -166,6 +166,7 @@ class PALScreen extends Component {
                 if (this.state.levelNum == 7) {
                     this.setState({ gameStarted: false });
                     alert("You win!");
+                    console.log("User got to level: " + this.state.levelNum); // To show user result
                 }
                 else if (this.state.levelNum - 1 > index) {
                     this.setState({ inputIndex: index + 1 });
@@ -181,6 +182,7 @@ class PALScreen extends Component {
         }
         else {
             alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
+            console.log("User got to level: " + this.state.levelNum); // To show user result
             this.setState({ gameStarted: false, levelNum: 0, selectText: "Press to Begin!" });
             this.resetBoxes();
         }

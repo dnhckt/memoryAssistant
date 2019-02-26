@@ -22,7 +22,7 @@ function shuffleContents(array) {
 
 class FRScreenCustom extends Component {
     static navigationOptions = {
-        title: "Word Bingo",
+        title: "Custom Word Bingo",
     }
     constructor(props){
         super(props);
@@ -70,7 +70,7 @@ class FRScreenCustom extends Component {
             this.beginGame();
         }
     }
-    beginGame = () => {
+    beginGame() {
         this.setState({ gameStarted: true });
 
         let bC = [...this.state.bingoCard]; // For user to remember
@@ -112,8 +112,6 @@ class FRScreenCustom extends Component {
                 for (i = 0; i < len; i++) {
                     if (currentWord != bingoCard[i]) {
                         count++;
-                        console.log(i);
-                        console.log(count);
                     }
                 }
                 if (count == len) { // If user said no and they're correct
@@ -135,6 +133,11 @@ class FRScreenCustom extends Component {
                 if (count == 1) { // If user said yes and they're correct 
                     alert("Correct!");
                     this.setState({ bingoCardFound: this.state.bingoCardFound + 1 });
+                    if (this.state.bingoCardFound == 9) {
+                        alert("YOU WIN!");
+                        console.log("User managed to find: " + this.state.bingoCardFound); // To show user results
+                        this.resetVars();
+                    }
                 }
                 else { // If user said yes and they're wrong
                     alert("Wrong!");
@@ -146,6 +149,7 @@ class FRScreenCustom extends Component {
             }
             else {
                 alert("You lose! you got " + this.state.bingoCardFound + " right!");
+                console.log("User managed to find: " + this.state.bingoCardFound); // To show user results
                 this.resetVars();
             }
         }
@@ -159,6 +163,7 @@ class FRScreenCustom extends Component {
     }
 
     resetVars() {
+        clearInterval(this.state.timeVar);
         this.setState({
             timer: null, gameStarted: false, bingoCard: 0, randSet: 0,
             randPromptCount: 16, bingoCardLen: null,
@@ -255,3 +260,4 @@ class FRScreenCustom extends Component {
 }
 
 export default FRScreenCustom;
+

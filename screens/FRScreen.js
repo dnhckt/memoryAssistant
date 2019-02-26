@@ -56,7 +56,7 @@ class FRScreen extends Component {
     }
 
     componentWillUnmount() {
-        this.resetVars();
+        // this.resetVars();
     }
 
     updateClock = () => {
@@ -67,7 +67,7 @@ class FRScreen extends Component {
             this.beginGame();
         }
     }
-    beginGame=()=> {
+    beginGame() {
         this.setState({gameStarted: true});
 
         let bC = [...this.state.bingoCard]; // For user to remember
@@ -130,6 +130,11 @@ class FRScreen extends Component {
                     if(count == 1) { // If user said yes and they're correct 
                         alert("Correct!");
                         this.setState({bingoCardFound: this.state.bingoCardFound + 1});
+                        if (this.state.bingoCardFound == 9) {
+                            alert("YOU WIN!");
+                            console.log("User managed to find: "  + this.state.bingoCardFound); // To show user results
+                            this.resetVars();
+                        }
                     }
                     else { // If user said yes and they're wrong
                         alert("Wrong!");
@@ -141,6 +146,7 @@ class FRScreen extends Component {
                 }    
                 else {
                     alert("You lose! you got " + this.state.bingoCardFound + " right!" );
+                    console.log("User managed to find: " + this.state.bingoCardFound); // To show user results
                     this.resetVars();
                 }
         }

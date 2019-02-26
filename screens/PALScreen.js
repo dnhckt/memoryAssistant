@@ -108,7 +108,6 @@ class PALScreen extends Component {
             this.setState({beginText: this.state.levelNum-count + " Img(s) Left"});
 
             if(this.state.levelNum == 1) {
-                // alert("Next Level");
                 this.setState({leftCounter: 0});
                 this.beginGame(); 
             }
@@ -116,7 +115,8 @@ class PALScreen extends Component {
                 if(this.state.levelNum == 7)
                 {
                     this.setState({gameStarted: false});
-                    alert("You win!");                     
+                    alert("You win!");            
+                    console.log("User got to level: " + this.state.levelNum); // To show user result
                 }
                 else if(this.state.levelNum-1 > index)
                 {
@@ -133,7 +133,8 @@ class PALScreen extends Component {
         }  
         else {
             alert("Game over.\n\n\n          You made it to level " + this.state.levelNum + "!");
-            this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!"});
+            console.log("User got to level: " + this.state.levelNum); // To show user result
+            this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!"}); 
             this.resetBoxes();
         }
 
