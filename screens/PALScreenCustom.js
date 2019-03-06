@@ -5,9 +5,9 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import { Alert, Button, TouchableOpacity, View, Text, Image } from 'react-native';
 
 import styles from '../src/Style';
-
 import ImageFadeView from '../src/ImageFadeView';
 import PromptFadeView from '../src/PromptFadeView';
+import soundEffects from '../src/soundEffects';
 
 /*
     Screen for the custom PAL Test
@@ -32,7 +32,7 @@ async function checkMultiPermissions() {
 /**
  * @function shuffleContents
  *  Randomizes the order of objects in an array
- *  @param {array} The array to randomize
+ *  @param {array}  array - The array to randomize
  *  @return {array} The randomized array
 */
 function shuffleContents(array) {
@@ -210,7 +210,6 @@ class PALScreenCustom extends Component {
     generateRand(gameStarted, level) {
 
         if (gameStarted) {
-
             /* Randomise a) which sprite to display and b) where it appears on the screen */
             shuffleContents(this.state.userImgArray); 
             let randBoxArray = [...this.state.randBoxArray];
@@ -257,8 +256,8 @@ class PALScreenCustom extends Component {
      *  Checks which box users select + call validateLvl
      * @param {number} input  - a value from (1-6) that is passed from the box they tap on
      */    
-    userInput(input) {
-        
+     userInput(input) {
+        if (this.state.gameStarted) {
         // Prevent too soon input with half second delay
         if (this.state.timer > this.state.promptBoxStart + 0.5) { 
 
@@ -291,6 +290,7 @@ class PALScreenCustom extends Component {
             }
         }
     }
+    }
     /**
     * @function validateLvl
     *  Compare user selection to correct answer + advance level / end game accordingly
@@ -304,12 +304,14 @@ class PALScreenCustom extends Component {
         
         /* If user is correct */
         if (correctAnswer) {
+            soundEffects.encouragementSound(true); // Generate positive sound effect
             count = count + 1;
             this.setState({ leftCounter: count });
             this.setState({ beginText: this.state.levelNum - count + " Img(s) Left" });
     
             /*  If level one, advance */
             if (this.state.levelNum == 1) {
+                soundEffects.nextLevelSound();
                 this.setState({ leftCounter: 0 });
                 this.beginGame();
             } else {
@@ -329,6 +331,7 @@ class PALScreenCustom extends Component {
 
                 /* if last index, advance level */
                 else {
+                    soundEffects.nextLevelSound();
                     this.setState({ leftCounter: 0 });
                     this.beginGame();
                 }
@@ -337,6 +340,8 @@ class PALScreenCustom extends Component {
 
         /* If user is incorrect, end game & reset state variables */
         else {
+            soundEffects.encouragementSound(false); // Generate negative sound effect
+            soundEffects.gameOverSound();
             alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
             console.log("User got to level: " + this.state.levelNum); // To show user result
             this.setState({ gameStarted: false, levelNum: 0, selectText: "Press to Begin!" });
@@ -444,14 +449,7 @@ class PALScreenCustom extends Component {
                         </Row>
 
                         <Row style={{}}>
-                            <Col>
-                                {/* <Button
-                                    style={[]}
-                                    title={this.state.selectText}
-                                    onPress={this.pickImage}
-                                 /> */}
-                                {/* <Col><Text style={{fontSize: 72}}>{this.state.requiredImgs}</Text></Col> */}
-                            </Col>
+                            <Col></Col>
                             <Col style={{ borderWidth: 5, borderColor: '#34495e',  marginTop: '1%', marginBottom: '1%', borderRadius: 20 }}>
                                 {/* Prompt Box */}
                                 {this.renderPromptImg(this.state.promptBox, this.state.promptBoxStart)}
