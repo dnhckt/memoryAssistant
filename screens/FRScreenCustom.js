@@ -9,6 +9,21 @@ import BingoFadeView from '../src/BingoFadeView';
 import styles from '../src/Style';
 
 
+/*
+    Screen for the personal FR Test
+    ========
+    User is displayed a bingo card they must memorize 
+    Personal words are displayed one by one
+    User must press yes or no for whether the word was on the card  
+    After three wrong guesses or all words are found the game ends
+*/
+
+/**
+ * @function shuffleContents
+ *  Randomizes the order of objects in an array
+ *  @param {array}  array - The array to randomize
+ *  @return {array} The randomized array
+*/
 function shuffleContents(array) {
     var x, y, z;
     for (x = array.length - 1; x > 0; x--) {
@@ -20,12 +35,18 @@ function shuffleContents(array) {
     return array;
 }
 
+/**
+ * @class FRScreenCustom
+ * Contains all functions for game logic and JSX for the screen
+ */
 class FRScreenCustom extends Component {
     static navigationOptions = {
         title: "Custom Word Bingo",
     }
     constructor(props){
         super(props);
+
+        /* Declare game variables */
         this.state = { 
             gameStarted: false,
             bingoCard: [""],
@@ -52,23 +73,36 @@ class FRScreenCustom extends Component {
             timer: null,
         }
     }
-
-    componentDidUpdate() {
-    }
-
+ /**
+    *  @function componentWillUnmount
+    *  Reset all state variables when leaving the page
+    */
     componentWillUnmount() {
         clearInterval(this.state.timeVar);
         this.resetVars();
     }
 
-    updateClock = () => {
+    /**
+   *  @function updateClock
+   *  Starts game timer used to control image displays
+   */
+   updateClock = () => {
         this.setState({ timer: this.state.timer + 1 }) // Stores clock second var as timer 
     }
+
+    /**
+     * @function beginButton
+     *  Simple boolean rule to ensure 'Begin Game' button cannot be repeatedly pressed
+     */
     beginButton() {
         if (!this.state.gameStarted) {
             this.beginGame();
         }
     }
+    /**
+     * @function beginGame
+     *  Function to set up game variables and begin when 'Begin Game' button is activated
+     */
     beginGame() {
         this.setState({ gameStarted: true });
 
@@ -96,9 +130,27 @@ class FRScreenCustom extends Component {
         this.setState({ timeVar: setInterval(this.updateClock, 1000) });
         this.generateRandom();
     }
+    
+    /**
+    * @function generateRandom
+    *  Shuffles arrays to display a random sequence of words
+    */ 
+    generateRandom() {
+        this.setState({ randPromptCount: this.state.randPromptCount - 1 });
+        if (this.state.randBoxPromptCount == 0) {
+            alert("YOU WIN!");
+            this.resetVars();
+        }
+    }
 
-    /* 0 = no, 1 = yes*/
+    /**
+     * @function validateLvl
+     *  Check if user tapped the correct button   
+     * @param {number} ans - 0 for wrong, 1 for correct 
+     */
     validateLvl(ans) {
+
+        /* If game loop + past time to remember cards */
         if (this.state.gameStarted && this.state.timer > 6) {
             let currentWord = this.state.randSet[this.state.randPromptCount];
             let bingoCard = [...this.state.bingoCard];
@@ -113,10 +165,12 @@ class FRScreenCustom extends Component {
                         count++;
                     }
                 }
-                if (count == len) { // If user said no and they're correct
+                // If user said no and they're correct
+                if (count == len) { 
                     alert("Correct!");
                 }
-                else { // If user said no and they're wrong 
+                // If user said no and they're wrong
+                else {  
                     alert("Wrong!");
                     this.setState({ wrongGuess: this.state.wrongGuess + 1 });
                 }
@@ -129,7 +183,9 @@ class FRScreenCustom extends Component {
                         count++;
                     }
                 }
-                if (count == 1) { // If user said yes and they're correct 
+                // If user said yes and they're correct 
+
+                if (count == 1) { 
                     alert("Correct!");
                     this.setState({ bingoCardFound: this.state.bingoCardFound + 1 });
                     if (this.state.bingoCardFound == 9) {
@@ -138,14 +194,17 @@ class FRScreenCustom extends Component {
                         this.resetVars();
                     }
                 }
-                else { // If user said yes and they're wrong
+                 // If user said yes and they're wrong
+                else {
                     alert("Wrong!");
                     this.setState({ wrongGuess: this.state.wrongGuess + 1 });
                 }
             }
+            // Keep going while user has three lives
             if (this.state.wrongGuess <= 3) {
                 this.generateRandom();
             }
+            // End game
             else {
                 alert("You lose! you got " + this.state.bingoCardFound + " right!");
                 console.log("User managed to find: " + this.state.bingoCardFound); // To show user results
@@ -153,25 +212,12 @@ class FRScreenCustom extends Component {
             }
         }
     }
-    generateRandom() {
-        this.setState({ randPromptCount: this.state.randPromptCount - 1 });
-        if (this.state.randBoxPromptCount == 0) {
-            alert("YOU WIN!");
-            this.resetVars();
-        }
-    }
 
-    resetVars() {
-        clearInterval(this.state.timeVar);
-        this.setState({
-            timer: null, gameStarted: false, bingoCard: 0, randSet: 0,
-            randPromptCount: 18, bingoCardLen: null,
-            bingoCardFound: 0, wrongGuess: 0,
-            beginText: "Press to Begin!",
-        });
-    }
-
-    // Function to fade in card with timer
+    /**
+     *  @function renderCard
+     *  Displays words (bingo card) to remember for 5 seconds
+     * @param {number} startTime - The time it appears
+     */
     renderCard(startTime) {
         if (this.state.timer > startTime) {
             return (
@@ -198,6 +244,12 @@ class FRScreenCustom extends Component {
             );
         }
     }
+
+    /**
+    *  @function renderWord
+    *  Displays words to test user memory
+    * @param {number} startTime - The time it appears
+    */
     renderWord(startTime) {
         if (this.state.timer > startTime) {
             return (
@@ -213,6 +265,22 @@ class FRScreenCustom extends Component {
             );
         }
     }
+
+    /**
+     *  @function resetVars
+     *  Called at end of game to reset state variables
+     */
+    resetVars() {
+        clearInterval(this.state.timeVar);
+        this.setState({
+            timer: null, gameStarted: false, bingoCard: 0, randSet: 0,
+            randPromptCount: 18, bingoCardLen: null,
+            bingoCardFound: 0, wrongGuess: 0,
+            beginText: "Press to Begin!",
+        });
+    }
+
+    /* Contains the content that is shown to the user */
     render() {
         return (
             <View style={styles.container}>
