@@ -27,23 +27,22 @@ class FRScreenCustom extends Component {
     constructor(props){
         super(props);
         this.state = { 
-                gameStarted: false,
-                bingoCard: [""],
-                randSet: [""],
-                randomWords: [
-                    "wedding", "holiday", "children", "birth","magical", "birthday", "happy",
-                    "family", "together", "christmas", "loved", "first", "jamaica",
-                    "hawaii", "greece", "best", "anniversary", "friend",
-                    "ship", "joy", "laugh", "success",  "win",
-                    "rainbow", "smile", "rainbows", "celebrate", "weekend", 
-                    "fun", "beach", "beautiful", "sunshine", "delicious", 
-                    "paradise", "sweet", "praise", "memories", "present", 
-                    "team", "freedom", "butterflies", "award", "call", 
-                    "chocolate", "hug", "relax", "nostalgic", "bed",                     
-                    "pizza", "wonderful", "sunshine", "tropical", "cupcakes", 
-                ],
-
-            randPromptCount: 16,
+            gameStarted: false,
+            bingoCard: [""],
+            randSet: [""],
+            randomWords: [
+                "wedding", "holiday", "children", "magical", "birthday",
+                "family", "together", "christmas", "loved", "first",
+                "hawaii", "greece", "best", "anniversary", "friend",
+                "ship", "joy", "laugh", "success", "win",
+                "rainbow", "smile", "rainbows", "celebrate", "weekend",
+                "fun", "beach", "beautiful", "sunshine", "delicious",
+                "paradise", "sweet", "praise", "memories", "present",
+                "team", "freedom", "butterflies", "award", "call",
+                "chocolate", "hug", "relax", "nostalgic", "bed",
+                "pizza", "wonderful", "sunshine", "tropical", "cupcakes",
+            ],
+            randPromptCount: 17,
             bingoCardLen: null,
             bingoCardFound: 0,
             wrongGuess: 0,
@@ -144,7 +143,7 @@ class FRScreenCustom extends Component {
                     this.setState({ wrongGuess: this.state.wrongGuess + 1 });
                 }
             }
-            if (this.state.wrongGuess < 3) {
+            if (this.state.wrongGuess <= 3) {
                 this.generateRandom();
             }
             else {
@@ -166,7 +165,7 @@ class FRScreenCustom extends Component {
         clearInterval(this.state.timeVar);
         this.setState({
             timer: null, gameStarted: false, bingoCard: 0, randSet: 0,
-            randPromptCount: 16, bingoCardLen: null,
+            randPromptCount: 18, bingoCardLen: null,
             bingoCardFound: 0, wrongGuess: 0,
             beginText: "Press to Begin!",
         });
