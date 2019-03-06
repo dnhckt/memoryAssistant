@@ -5,8 +5,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import PromptFadeView from '../src/PromptFadeView';
 import BingoFadeView from '../src/BingoFadeView';
 import styles from '../src/Style';
-
-
+import soundEffects from "../src/soundEffects";
 
 /*
     Screen for the basic FR Test
@@ -151,6 +150,7 @@ class FRScreen extends Component {
 
         /* If game loop + past time to remember cards */
         if (this.state.gameStarted && this.state.timer > 6) {
+
             let currentWord = this.state.randSet[this.state.randPromptCount];
             let bingoCard = [...this.state.bingoCard];
 
@@ -166,11 +166,11 @@ class FRScreen extends Component {
                 }
                 // If user said no and they're correct
                 if (count == len) {
-                    alert("Correct!");
+                    soundEffects.encouragementSound(true);
                 }
                 // If user said no and they're wrong
                 else {
-                    alert("Wrong!");
+                    soundEffects.encouragementSound(false);
                     this.setState({ wrongGuess: this.state.wrongGuess + 1 });
                 }
             }
@@ -185,9 +185,10 @@ class FRScreen extends Component {
                 // If user said yes and they're correct 
 
                 if (count == 1) {
-                    alert("Correct!");
+                    soundEffects.encouragementSound(true);
                     this.setState({ bingoCardFound: this.state.bingoCardFound + 1 });
                     if (this.state.bingoCardFound == 9) {
+                        soundEffects.encouragementSound(true);
                         alert("YOU WIN!");
                         console.log("User managed to find: " + this.state.bingoCardFound); // To show user results
                         this.resetVars();
@@ -195,16 +196,21 @@ class FRScreen extends Component {
                 }
                 // If user said yes and they're wrong
                 else {
-                    alert("Wrong!");
+                    soundEffects.encouragementSound(false);
                     this.setState({ wrongGuess: this.state.wrongGuess + 1 });
                 }
             }
+
+            /* Play audio of  next word */
+            soundEffects.wordPromptSound(this.state.randSet[this.state.randPromptCount - 1]);
+
             // Keep going while user has three lives
             if (this.state.wrongGuess <= 3) {
                 this.generateRandom();
             }
             // End game
             else {
+                soundEffects.encouragementSound(false);
                 alert("You lose! you got " + this.state.bingoCardFound + " right!");
                 console.log("User managed to find: " + this.state.bingoCardFound); // To show user results
                 this.resetVars();
@@ -250,6 +256,10 @@ class FRScreen extends Component {
     * @param {number} startTime - The time it appears
     */
     renderWord(startTime) {
+        if (this.state.timer == startTime) {
+            /* Play audio of  first word */
+            soundEffects.wordPromptSound(this.state.randSet[this.state.randPromptCount]);
+        }
         if (this.state.timer > startTime) {
             return (
                 <PromptFadeView
@@ -274,7 +284,7 @@ class FRScreen extends Component {
         clearInterval(this.state.timeVar);
         this.setState({
             timer: null, gameStarted: false, bingoCard: 0, randSet: 0,
-            randPromptCount: 18, bingoCardLen: null,
+            randPromptCount: 17, bingoCardLen: null,
             bingoCardFound: 0, wrongGuess: 0,
             beginText: "Press to Begin!",
         });
