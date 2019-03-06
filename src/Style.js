@@ -41,9 +41,6 @@ const styles = StyleSheet.create({
       height: '50%',
     }, 
     menuTitleRow: {
-      borderColor: navy,
-      borderBottomWidth: 3,
-      borderRadius: 20,
       alignContent: 'center',
       flex: 0.7,
       marginLeft: '5%',
@@ -73,6 +70,9 @@ const styles = StyleSheet.create({
    header: {
     fontSize: 1 * Dimensions.get('window').width * 0.1,
     // textDecorationLine: 'underline',
+     borderColor: navy,
+     borderBottomWidth: 3,
+     borderRadius: 20,
     fontWeight:  'bold',
     color: navy,
   },
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     },  
     roundedButton: {
       width: '100%', 
-      backgroundColor: '#34495e',
+      backgroundColor: navy,
        justifyContent: "center", 
        borderRadius: 20,
     },
@@ -118,6 +118,10 @@ const styles = StyleSheet.create({
       borderColor: navy,
       justifyContent: "center",
       borderWidth: 3,
+  },
+  bingoText: {
+    fontSize: 30,
+    textAlign: 'center',
   },
 });
 

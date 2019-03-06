@@ -220,25 +220,25 @@ class FRScreen extends Component {
     renderCard(startTime) {
         if (this.state.timer > startTime) {
             return (
-                <BingoFadeView style={{ height: "100%", width: "100%", fontSize: 76, alignContent: "center", justifyContent: "center", }}
+                <BingoFadeView style={{ height: "100%", width: "100%", fontSize: 76, alignItems: "center", justifyContent: "center", }}
                     startTime={startTime}
                 >
                     <Row style={{ flex: 0.05 }}></Row>
-                    <Row>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[3]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[4]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[5]}</Text></Col>
-                    </Row>
-                    <Row>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[0]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[1]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[2]}</Text></Col>
-                    </Row>
-                    <Row>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[6]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[7]}</Text></Col>
-                        <Col style={[styles.bingoButton]}><Text style={{ fontSize: 24 }}>{this.state.bingoCard[8]}</Text></Col>
-                    </Row>
+                        <Row>
+                            <Col style={[styles.bingoButton]}><Text style={[styles.bingoText]}>{this.state.bingoCard[3]}</Text></Col>
+                            <Col style={[styles.bingoButton]}><Text style={[styles.bingoText]}>{this.state.bingoCard[4]}</Text></Col>
+                            <Col style={[styles.bingoButton]}><Text style={[styles.bingoText]}>{this.state.bingoCard[5]}</Text></Col>
+                        </Row>
+                        <Row>
+                            <Col style={[styles.bingoButton]}><Text style={[styles.bingoText]}>{this.state.bingoCard[0]}</Text></Col>
+                            <Col style={[styles.bingoButton]}><Text style={[styles.bingoText]}>{this.state.bingoCard[1]}</Text></Col>
+                            <Col style={[styles.bingoButton]}><Text style={[styles.bingoText]}>{this.state.bingoCard[2]}</Text></Col>
+                        </Row>
+                        <Row>
+                            <Col style={[styles.bingoButton]}><Text style={[styles.bingoText]}>{this.state.bingoCard[6]}</Text></Col>
+                            <Col style={[styles.bingoButton]}><Text style={[styles.bingoText]}>{this.state.bingoCard[7]}</Text></Col>
+                            <Col style={[styles.bingoButton]}><Text style={[styles.bingoText]}>{this.state.bingoCard[8]}</Text></Col>
+                        </Row>
                 </BingoFadeView>
             );
         }
@@ -256,9 +256,10 @@ class FRScreen extends Component {
                     style={{ height: "100%", width: "100%", fontSize: 76, alignContent: "center", justifyContent: "center" }}
                     startTime={startTime}
                 >
-                    <Text style={{ fontSize: 24 }}>Words found: {this.state.bingoCardFound}/{this.state.bingoCard.length}</Text>
-                    <Text style={{ fontSize: 24 }}>Wrong Guesses: {this.state.wrongGuess}</Text>
-                    <Text style={{ fontSize: 72 }}>{this.state.randSet[this.state.randPromptCount]}</Text>
+                    <Text style={[styles.bingoText]}>Words found: {this.state.bingoCardFound}/{this.state.bingoCard.length}</Text>
+                    <Text style={[styles.bingoText]}>Wrong Guesses: {this.state.wrongGuess}</Text>
+                    <Row></Row>
+                    <Text style={{ fontSize: 72, textAlign: 'center' }}>{this.state.randSet[this.state.randPromptCount]}</Text>
                     <Row style={{}}></Row>
                 </PromptFadeView>
             );
