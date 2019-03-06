@@ -1,17 +1,26 @@
 import React, { Component } from "react";
 import {Col, Row, Grid} from "react-native-easy-grid";
 import {Alert, Button, TouchableOpacity, View, Text, Image} from 'react-native';
+import {Speech} from 'expo';
 
 import Sprites from '../src/Sprites';
 import styles from '../src/Style';
 import ImageFadeView from '../src/ImageFadeView';
 import PromptFadeView from '../src/PromptFadeView';
 
-
 /*
     Screen for the basic PAL Test
+    ========
+    User is displayed a sequence of images in random boxes from levels 1 -6 (level num = length of sequence)
+    User must tap the box where an image was when it appears in the prompt box
 */
 
+/**
+ * @function shuffleContents 
+ *  Randomizes the order of objects in an array
+ *  @param {array} The array to randomize 
+ *  @return {array} The randomized array 
+*/
 function shuffleContents(array){
     var x, y, z;
     for (x = array.length - 1; x > 0; x--) {
@@ -23,22 +32,26 @@ function shuffleContents(array){
     return array;
 }
 
-// Class for the game
+/**
+ * @class PALScreen
+ * Contains all functions for game logic and JSX for the screen
+ */
 class PALScreen extends Component {
     static navigationOptions = {
         title: "Picture Match Game" 
     }
     constructor(props){
         super(props);
+
+        /* Declare game variables */
         this.state = {
-            // Array to store sprites
            spriteArray: [Sprites.beach, Sprites.bev, Sprites.bikini, 
                                Sprites.bishop, Sprites.coconut, Sprites.dolphin,
                                Sprites.man, Sprites.woman, Sprites.tiki, Sprites.necklace,
                                Sprites.harbour, Sprites.pineapple, Sprites.volcano], 
-           levelNum: 0, // Control level num 
-           timeVar: null, // Control timer 
-           timer: 0, // timer 
+           levelNum: 0,  
+           timeVar: null, 
+           timer: 0, 
 
            /* BOX VARS (Index, startTime, endTime) */
            box1: null, box1Start: null, box1End: null, // Top left  
@@ -54,39 +67,50 @@ class PALScreen extends Component {
            box6: null, box6Start: null, box6End: null,// Bot right
            /* End box vars */
 
-            promptBox: null, //Prompt box image
+            // Prompt box image + start time
+            promptBox: null,
             promptBoxStart: null,
+            randBoxArray: [0, 1, 2, 3, 4, 5], 
 
-            randBoxArray: [0, 1, 2, 3, 4, 5], // Array for box vars
             inputIndex: 0, // To advance user input
-            firstRandPrompt: null,
 
             beginText: "Press to Begin!",
             leftCounter: 0, // To display images left
         }
     }
 
-    // When game starts 
-    componentDidMount() {     
-        // alert("In this game, wait for the images to flash up. When displayed at the bottom, remember where they were hidden.") 
-    }
+    /**
+     *  @function componentWillUnmount 
+     *  Reset all state variables when leaving the page
+     */
     componentWillUnmount() {
         this.resetBoxes();
         this.setState({timer: 0});
         clearInterval(this.state.timeVar);
     }
-    componentDidUpdate() {
-        if(this.state.timer == 5){ 
-           // alert("box1: " + this.state.box1Start + " box2: " + this.state.box2Start + " box3: " + this.state.box3Start);
-        }
+
+    /**   
+     *  @function updateClock
+     *  Starts game timer used to control image displays 
+     */
+    updateClock = () => {
+        this.setState({ timer: this.state.timer + 1 })
     }
 
-    // To prevent begin button leak
+    /**
+     * @function beginButton 
+     *  Simple boolean rule to ensure 'Begin Game' button cannot be repeatedly pressed 
+     */
     beginButton() {
         if(!this.state.gameStarted) {
             this.beginGame();
         }
     }
+
+    /**
+     * @function beginGame
+     *  Function to set up game variables and begin level 1 when 'Begin Game' button is activated
+     */
     beginGame() {   
         this.setState({timer: 0});
         this.setState({beginText: this.state.levelNum+1 + " Img(s) Left"});
@@ -98,105 +122,66 @@ class PALScreen extends Component {
         this.setState({timeVar: setInterval(this.updateClock,1000), gameStarted, levelNum: level});
         this.generateRand(gameStarted, level); 
     }
-    
-    validateLvl(correctAnswer, index) {
-        this.resetBoxes();
-        let count = this.state.leftCounter;
-        if(correctAnswer) {
-            count = count + 1;
-            this.setState({leftCounter: count});
-            this.setState({beginText: this.state.levelNum-count + " Img(s) Left"});
 
-            if(this.state.levelNum == 1) {
-                this.setState({leftCounter: 0});
-                this.beginGame(); 
-            }
-            else {
-                if(this.state.levelNum == 7)
-                {
-                    this.setState({gameStarted: false});
-                    alert("You win!");            
-                    console.log("User got to level: " + this.state.levelNum); // To show user result
-                }
-                else if(this.state.levelNum-1 > index)
-                {
-                    this.setState({inputIndex: index+1});
-                    this.setState({promptBox: this.state.spriteArray[index+1], promptBoxStart: this.state.timer+1})
-                    // alert("Correct!");
-                }
-                else {
-                    // alert("Next Level");
-                    this.setState({leftCounter: 0});
-                    this.beginGame();
-                }
-            }
-        }  
-        else {
-            alert("Game over.\n\n\n          You made it to level " + this.state.levelNum + "!");
-            console.log("User got to level: " + this.state.levelNum); // To show user result
-            this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!"}); 
-            this.resetBoxes();
-        }
-
-    }
-    
-
-    resetBoxes() {
-        this.setState({box1: null, box2: null, box3: null, box4: null, box5: null, box6: null});
-        this.setState({box1Start: null, box2Start: null, box3Start: null, box4Start: null, box5Start: null, box6Start: null});
-        this.setState({box1End: null, box2End: null, box3End: null, box4End: null, box5End: null, box6End: null});
-        this.setState({promptBox: null, promptBoxStart: null, inputIndex: 0, beginText: "Press To Begin!"});
-    }
-
-    // Function to generate random numbers 
-    generateRand(gameStarted,level) {
-        if(gameStarted) {
-
-            shuffleContents(this.state.spriteArray); // randomise order of sprites 
+   /**
+    * @function generateRand 
+    *  Shuffles arrays to display a random sequence of images
+    * @param {boolean} gameStarted  - (boolean value to start the game loop)
+    * @param {number} level  - the level number (number of images to randomly display)
+    */
+    generateRand(gameStarted, level) {
+        
+        if (gameStarted) {
+ 
+            /* Randomise a) which sprite to display and b) where it appears on the screen */
+            shuffleContents(this.state.spriteArray);
             let randBoxArray = [...this.state.randBoxArray];
-            for (var i=0; i <= level; i++) 
-            {
-                 shuffleContents(randBoxArray); // randomise order of boxes  
-                 this.setState({randBoxArray});   
-            }             
-  
-            // Level based random images
-            for (var i=0; i < level; i++) 
-            {
-                // alert("level: " + this.state.levelNum + " index: " + this.state.inputIndex);            
-                let y = i + 1;
-                switch (randBoxArray[i]) { 
+
+            for (var i = 0; i <= level; i++) {
+                shuffleContents(randBoxArray); 
+                this.setState({ randBoxArray });
+            }
+
+            /* Display random images in a random box up to level num */
+            for (var i = 0; i < level; i++) {
+                let y = i + 2.5;
+                switch (randBoxArray[i]) {
                     case 0:
-                       this.setState({box1: this.state.spriteArray[i], box1Start: i, box1End: y});
-                    break;
-                    case 1:
-                        this.setState({box2: this.state.spriteArray[i], box2Start: i, box2End: y});
-                    break;
-                    case 2:
-                        this.setState({box3: this.state.spriteArray[i], box3Start: i, box3End: y});
-                    break;
-                    case 3:
-                        this.setState({box4: this.state.spriteArray[i], box4Start: i, box4End: y});
-                    break;  
-                    case 4:
-                        this.setState({box5: this.state.spriteArray[i], box5Start: i, box5End: y});
-                    break;
-                    case 5:
-                        this.setState({box6: this.state.spriteArray[i], box6Start: i, box6End: y});
-                    break;       
-                }
-                switch (randBoxArray[i]) { 
-                        case 1:
-                        var firstPic = i; // Find the box with lowest start time to set as first prompt pic
+                        this.setState({ box1: this.state.spriteArray[i], box1Start: i, box1End: y });
                         break;
-                        case 6: 
+                    case 1:
+                        this.setState({ box2: this.state.spriteArray[i], box2Start: i, box2End: y });
+                        break;
+                    case 2:
+                        this.setState({ box3: this.state.spriteArray[i], box3Start: i, box3End: y });
+                        break;
+                    case 3:
+                        this.setState({ box4: this.state.spriteArray[i], box4Start: i, box4End: y });
+                        break;
+                    case 4:
+                        this.setState({ box5: this.state.spriteArray[i], box5Start: i, box5End: y });
+                        break;
+                    case 5:
+                        this.setState({ box6: this.state.spriteArray[i], box6Start: i, box6End: y });
+                        break;
+                }
+
+                /* Find the box with lowest start time and use as first prompt image (for level 1 + first prompt) */
+                switch (randBoxArray[i]) {
+                   case 1:
+                        var firstPic = i; 
+                        break;
+                    case 6:
                         var lastPic = i; // find last pic
                         break
                 }
             }
-            
+
             // if(level == 1) {}
-            this.setState({promptBox: this.state.spriteArray[0], promptBoxStart: this.state.levelNum+1});    
+            
+            /* Display first prompt */
+            this.setState({ promptBox: this.state.spriteArray[0], promptBoxStart: this.state.levelNum + 1 });
+            
             /* Randomise the prompt images */
             // else {
             //     this.state.firstRandPrompt =  Math.floor((Math.random() * 5)); 
@@ -204,12 +189,110 @@ class PALScreen extends Component {
             // }
         }
     }
+    
 
-    updateClock=()=> {
-        this.setState({timer: this.state.timer + 1}) // Stores clock second var as timer 
+    /**
+     *  @function userInput
+     *  Checks which box users select + call validateLvl
+     * @param {number} input  - a value from (1-6) that is passed from the box they tap on 
+     */
+    userInput(input) {
+        
+        // Prevent too soon input with half second delay
+        if (this.state.timer > this.state.promptBoxStart + 0.5) { 
+            let i = this.state.inputIndex;
+            switch (input) {
+                case 0:
+                    if (this.state.randBoxArray[i] == 0) { this.validateLvl(true, i); i++; }
+                    else { this.validateLvl(false, i); }
+                    break;
+                case 1:
+                    if (this.state.randBoxArray[i] == 1) { this.validateLvl(true, i); i++; }
+                    else { this.validateLvl(false, i); }
+                    break;
+                case 2:
+                    if (this.state.randBoxArray[i] == 2) { this.validateLvl(true, i); i++; }
+                    else { this.validateLvl(false, i); }
+                    break;
+                case 3:
+                    if (this.state.randBoxArray[i] == 3) { this.validateLvl(true, i); i++; }
+                    else { this.validateLvl(false, i); }
+                    break;
+                case 4:
+                    if (this.state.randBoxArray[i] == 4) { this.validateLvl(true, i); i++; }
+                    else { this.validateLvl(false, i); }
+                    break;
+                case 5:
+                    if (this.state.randBoxArray[i] == 5) { this.validateLvl(true, i); i++; }
+                    else { this.validateLvl(false, i); }
+                    break;
+            }
+        }
     }
 
-    // Function to fade in image with timer
+    /**
+     * @function validateLvl 
+     *  Compare user selection to correct answer + advance level / end game accordingly
+     * @param {boolean} correctAnswer - Whether user selected correct answer
+     * @param {number} index  - Index of which image is being tested
+     */
+    validateLvl(correctAnswer, index) {
+        
+        /* Prevent box value leaks */
+        this.resetBoxes();
+        let count = this.state.leftCounter;
+
+         /* If user is correct */
+        if(correctAnswer) {
+            count = count + 1;
+            this.setState({leftCounter: count});
+            this.setState({beginText: this.state.levelNum-count + " Img(s) Left"});
+            
+            /*  If level one, advance */
+            if(this.state.levelNum == 1) {
+                this.setState({leftCounter: 0});
+                this.beginGame(); 
+            } else {
+                
+                /* If level 6 complete, end game */
+                if(this.state.levelNum == 7)
+                {
+                    this.setState({gameStarted: false});
+                    alert("You win!");            
+                    console.log("User got to level: " + this.state.levelNum); // To show user result
+                }
+
+                /* Otherwise, advance index */
+                else if(this.state.levelNum-1 > index)
+                {
+                    this.setState({inputIndex: index+1});
+                    this.setState({promptBox: this.state.spriteArray[index+1], promptBoxStart: this.state.timer+1})
+                }
+                
+                /* if last index, advance level */
+                else {
+                    this.setState({leftCounter: 0});
+                    this.beginGame();
+                }
+            }
+        }  
+
+        /* If user is incorrect, end game & reset state variables */
+        else {
+            alert("Game over.\n\n\n          You made it to level " + this.state.levelNum + "!");
+            console.log("User got to level: " + this.state.levelNum); // To show user result
+            this.setState({gameStarted: false, levelNum: 0, beginText: "Press to Begin!"}); 
+            this.resetBoxes();
+        }
+    }   
+
+    /**
+     *  @function renderImg 
+     *  Displays image in box at given time 
+     * @param {Image} img - The image to display
+     * @param {number} startTime - The time it appears
+     * @param {number} endTime - The time it disappears
+     */
     renderImg(img, startTime, endTime) {
         if(this.state.timer > startTime) {
             return( 
@@ -222,7 +305,13 @@ class PALScreen extends Component {
             );
         }
     }
-    // Function to display prompt
+
+    /**
+     *  @function renderPromptImg
+     *  Displays the prompt image on the screen/.
+     * @param {Image} img - The image to display
+     * @param {number} startTime - The time it appears
+     */
     renderPromptImg(img, startTime) {
         if(this.state.timer > startTime) {
             return( 
@@ -235,39 +324,18 @@ class PALScreen extends Component {
         }
     }
 
-    // Function to validate user input
-    userInput(input) {
-        if(this.state.timer > this.state.promptBoxStart+0.5) // Prevent too soon input with half second delay
-        {
-            let i = this.state.inputIndex;
-            switch(input) {
-                    case 0:
-                        if(this.state.randBoxArray[i] == 0) {this.validateLvl(true, i);i++;}
-                        else{this.validateLvl(false, i);}
-                    break;
-                    case 1:
-                        if(this.state.randBoxArray[i] == 1) {this.validateLvl(true, i);i++;}
-                        else{this.validateLvl(false, i);}
-                    break;
-                    case 2:
-                        if(this.state.randBoxArray[i] == 2) {this.validateLvl(true, i);i++;}
-                        else{this.validateLvl(false, i);}
-                    break;
-                    case 3:
-                        if(this.state.randBoxArray[i] == 3) {this.validateLvl(true, i);i++;}
-                        else{this.validateLvl(false, i);}
-                    break;
-                    case 4:
-                        if(this.state.randBoxArray[i] == 4) {this.validateLvl(true, i);i++;}
-                        else{this.validateLvl(false, i);}
-                    break;
-                    case 5:
-                        if(this.state.randBoxArray[i] == 5) {this.validateLvl(true, i);i++;}
-                        else{this.validateLvl(false, i);}
-                    break;
-                }
-        }
+    /**
+     *  @function resetBoxes 
+     *  Called at end of game to reset state variables 
+     */
+    resetBoxes() {
+        this.setState({ box1: null, box2: null, box3: null, box4: null, box5: null, box6: null });
+        this.setState({ box1Start: null, box2Start: null, box3Start: null, box4Start: null, box5Start: null, box6Start: null });
+        this.setState({ box1End: null, box2End: null, box3End: null, box4End: null, box5End: null, box6End: null });
+        this.setState({ promptBox: null, promptBoxStart: null, inputIndex: 0, beginText: "Press To Begin!" });
     }
+ 
+    /* Contains the content that is shown to the user */ 
     render() {
         return (
             <View style={styles.container}>

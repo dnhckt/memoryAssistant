@@ -10,9 +10,17 @@ import ImageFadeView from '../src/ImageFadeView';
 import PromptFadeView from '../src/PromptFadeView';
 
 /*
-        Screen for the customized PAL Test
+    Screen for the custom PAL Test
+    ========
+    User selects 6 images to use in gameplay
+    User is displayed a sequence of images in random boxes from levels 1 -6 (level num = length of sequence)
+    User must tap the box where an image was when it appears in the prompt box
 */
 
+/**
+ *  @function checkMultiPermissions
+ *  Ensure iOS permissions are granted for camera roll
+ */
 async function checkMultiPermissions() {
     const { Permissions } = Expo;
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
@@ -21,6 +29,12 @@ async function checkMultiPermissions() {
     }
 }
 
+/**
+ * @function shuffleContents
+ *  Randomizes the order of objects in an array
+ *  @param {array} The array to randomize
+ *  @return {array} The randomized array
+*/
 function shuffleContents(array) {
     var x, y, z;
     for (x = array.length - 1; x > 0; x--) {
@@ -32,24 +46,29 @@ function shuffleContents(array) {
     return array;
 }
 
-// Class for the game
-class PALScreen extends Component {
+/**
+ * @class PALScreenCustom
+ * Contains all functions for game logic and JSX for the screen
+ */
+class PALScreenCustom extends Component {
     static navigationOptions = {
         title: "Custom Picture Match Game",
     }
     constructor(props) {
         super(props);
+
+        /* Declare game variables */
         this.state = {
-            // Image selection vars
-            userImg1: null, userImg2: null, userImg3: null, userImg4: null, userImg5: null, userImg6: null,
-            requiredImgs: 6,
 
-            // Array to store user images
-            userImgArray: [],
-
-            levelNum: 0, // Control level num 
-            timeVar: null, // Control timer 
+            levelNum: 0,
+            timer: 0, 
+            timeVar: null,
             gameStarted: false,
+
+            /* Vars to select images from camera roll */
+            userImg1: null, userImg2: null, userImg3: null, userImg4: null, userImg5: null, userImg6: null,
+            requiredImgs: 6, 
+            userImgArray: [],
 
             /* BOX VARS (Index, startTime, endTime) */
             box1: null, box1Start: null, box1End: null, // Top left  
@@ -65,11 +84,10 @@ class PALScreen extends Component {
             box6: null, box6Start: null, box6End: null,// Bot right
             /* End box vars */
 
-            promptBox: null, //Prompt box image
+            //Prompt box image + start
+            promptBox: null, 
             promptBoxStart: null,
-
-            randBoxArray: [0, 1, 2, 3, 4, 5], // Array for box vars
-            timer: 0, // timer 
+            randBoxArray: [0, 1, 2, 3, 4, 5],
 
             inputIndex: 0, // To advance user input
             leftCounter: 0, // To display images left
@@ -79,20 +97,27 @@ class PALScreen extends Component {
         }
     }
 
-    /* Image picker method */
+    /** 
+     *  @function pickImage
+     *  Lets user select their 6 custom images + begin the game
+     */
     pickImage = async () => {
-        let req = this.state.requiredImgs
+        /* If all images selected, act as begin button */
+        let req = this.state.requiredImgs;
+
         if (req == 0 && !this.state.gameStarted) {
             this.beginGame();
         }
+
+        /* Else, access camera gallery */
         else if (req > 0) {
             let result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
             });
-
+            
+            /*  Add image to array + update state */
             if (!result.cancelled) {
-                // Put image in the array
                 let userImgArray = [...this.state.userImgArray];
                 let userImg = { ...userImgArray[req - 1] };
 
@@ -102,6 +127,7 @@ class PALScreen extends Component {
                 this.setState({ userImgArray });
                 let newReqImgs = this.state.requiredImgs - 1;
 
+                /* Six selected - change to 'Begin Game'  button */
                 if (newReqImgs == 0) {
                     this.setState({ requiredImgs: newReqImgs, selectText: this.state.beginText });
                 }
@@ -109,29 +135,54 @@ class PALScreen extends Component {
                     this.setState({ requiredImgs: newReqImgs, selectText: "Pick " + newReqImgs + " photos" });
                 }
             }
+
+            /* Image selection not completed properly */
             else if (result.cancelled) {
                 alert("Please make sure you press 'crop' and not 'back' to select a picture!");
             }
         }
     }
 
-    // When game starts 
+    /**
+     *  @function componentDidMount
+     *  When screen is opened, ensure permissions 
+     */
     componentDidMount() {
         checkMultiPermissions();
     }
+
+    /**
+    *  @function componentWillUnmount
+    *  Reset all state variables when leaving the page
+    */
     componentWillUnmount() {
         this.resetBoxes();
         this.setState({ timer: 0 });
         clearInterval(this.state.timeVar);
     }
-    componentDidUpdate() {
-    }
-    // To prevent begin button leak
+
+     /**   
+     *  @function updateClock
+     *  Starts game timer used to control image displays 
+     */
+        updateClock = () => {
+            this.setState({ timer: this.state.timer + 1 })
+        }
+
+    /**
+     * @function beginButton
+     *  Simple boolean rule to ensure 'Begin Game' button cannot be repeatedly pressed
+     */    
     beginButton() {
         if (!this.state.gameStarted) {
             this.beginGame();
         }
     }
+
+    /**
+    * @function beginGame
+    *  Function to set up game variables and begin level 1 when 'Begin Game' button is activated
+    */
     beginGame = () => {
         if (this.state.requiredImgs == 0) { // If user has selected all images
 
@@ -150,67 +201,26 @@ class PALScreen extends Component {
         }
     }
 
-    validateLvl(correctAnswer, index) {
-        this.resetBoxes();
-        let count = this.state.leftCounter;
-        if (correctAnswer) {
-            count = count + 1;
-            this.setState({ leftCounter: count });
-            this.setState({ beginText: this.state.levelNum - count + " Img(s) Left" });
-            if (this.state.levelNum == 1) {
-                // alert("Next Level");
-                this.setState({ leftCounter: 0 });
-                this.beginGame();
-            }
-            else {
-                if (this.state.levelNum == 7) {
-                    this.setState({ gameStarted: false });
-                    alert("You win!");
-                    console.log("User got to level: " + this.state.levelNum); // To show user result
-                }
-                else if (this.state.levelNum - 1 > index) {
-                    this.setState({ inputIndex: index + 1 });
-                    this.setState({ promptBox: this.state.userImgArray[index + 1], promptBoxStart: this.state.timer + 1 })
-                    // alert("Correct!");
-                }
-                else {
-                    // alert("Next Level");
-                    this.setState({ leftCounter: 0 });
-                    this.beginGame();
-                }
-            }
-        }
-        else {
-            alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
-            console.log("User got to level: " + this.state.levelNum); // To show user result
-            this.setState({ gameStarted: false, levelNum: 0, selectText: "Press to Begin!" });
-            this.resetBoxes();
-        }
-        // this.setState({timer: 0});
-        // clearInterval(this.state.timeVar);
-    }
-
-    resetBoxes() {
-        this.setState({ box1: null, box2: null, box3: null, box4: null, box5: null, box6: null });
-        this.setState({ box1Start: null, box2Start: null, box3Start: null, box4Start: null, box5Start: null, box6Start: null });
-        this.setState({ box1End: null, box2End: null, box3End: null, box4End: null, box5End: null, box6End: null });
-        this.setState({ promptBox: null, promptBoxStart: null, inputIndex: 0 });
-    }
-
-    // Function to generate random numbers 
+    /**
+     * @function generateRand
+     *  Shuffles arrays to display a random sequence of images
+     * @param {boolean} gameStarted  - (boolean value to start the game loop)
+     * @param {number} level  - the level number (number of images to randomly display)
+     */
     generateRand(gameStarted, level) {
+
         if (gameStarted) {
 
-            shuffleContents(this.state.userImgArray); // randomise order of sprites 
-
-            // Level based random images
+            /* Randomise a) which sprite to display and b) where it appears on the screen */
+            shuffleContents(this.state.userImgArray); 
             let randBoxArray = [...this.state.randBoxArray];
 
             for (var i = 0; i < level; i++) {
-                shuffleContents(randBoxArray); // Set a value for each step in array
+                shuffleContents(randBoxArray); 
                 this.setState({ randBoxArray });
             }
 
+           /* Display random images in a random box up to level num */
             for (var i = 0; i < level; i++) {
                 let y = i + 2.5;
 
@@ -236,45 +246,22 @@ class PALScreen extends Component {
                 }
             }
 
+            /* Display first prompt */
             this.setState({ promptBox: this.state.userImgArray[0], promptBoxStart: (this.state.levelNum + 3) })
 
         }
     }
 
-    updateClock = () => {
-        this.setState({ timer: this.state.timer + 1 }) // Stores clock second var as timer 
-    }
-
-    // Function to fade in image with timer
-    renderImg(img, startTime, endTime) {
-        if (this.state.timer > startTime) {
-            return (
-                <ImageFadeView style={{}}
-                    startTime={startTime}
-                    endTime={endTime}
-                >
-                    <Image style={{ maxHeight: '100%', maxWidth: '100%', borderRadius: 0 }} source={img}></Image>
-                </ImageFadeView>
-            );
-        }
-    }
-    // Function to display prompt ready to press
-    renderPromptImg(img, startTime) {
-        if (this.state.timer > startTime) {
-            return (
-                <PromptFadeView
-                    startTime={startTime}
-                >
-                    <Image style={{ height: '98%', width: '100%', borderRadius: 20 }} source={img}></Image>
-                </PromptFadeView>
-            );
-        }
-    }
-
-    // Function to validate user input
+   /**
+     *  @function userInput
+     *  Checks which box users select + call validateLvl
+     * @param {number} input  - a value from (1-6) that is passed from the box they tap on
+     */    
     userInput(input) {
-        if (this.state.timer > this.state.promptBoxStart + 0.5) // Prevent too soon input with half second delay
-        {
+        
+        // Prevent too soon input with half second delay
+        if (this.state.timer > this.state.promptBoxStart + 0.5) { 
+
             let i = this.state.inputIndex;
             switch (input) {
                 case 0:
@@ -304,6 +291,109 @@ class PALScreen extends Component {
             }
         }
     }
+    /**
+    * @function validateLvl
+    *  Compare user selection to correct answer + advance level / end game accordingly
+    * @param {boolean} correctAnswer - Whether user selected correct answer
+    * @param {number} index  - Index of which image is being tested
+    */
+    validateLvl(correctAnswer, index) {
+        /* Prevent box value leaks */
+        this.resetBoxes();
+        let count = this.state.leftCounter;
+        
+        /* If user is correct */
+        if (correctAnswer) {
+            count = count + 1;
+            this.setState({ leftCounter: count });
+            this.setState({ beginText: this.state.levelNum - count + " Img(s) Left" });
+    
+            /*  If level one, advance */
+            if (this.state.levelNum == 1) {
+                this.setState({ leftCounter: 0 });
+                this.beginGame();
+            } else {
+
+                /* If level 6 complete, end game */
+                if (this.state.levelNum == 7) {
+                    this.setState({ gameStarted: false });
+                    alert("You win!");
+                    console.log("User got to level: " + this.state.levelNum); // To show user result
+                }
+
+                /* Otherwise, advance index */
+                else if (this.state.levelNum - 1 > index) {
+                    this.setState({ inputIndex: index + 1 });
+                    this.setState({ promptBox: this.state.userImgArray[index + 1], promptBoxStart: this.state.timer + 1 })
+                }
+
+                /* if last index, advance level */
+                else {
+                    this.setState({ leftCounter: 0 });
+                    this.beginGame();
+                }
+            }
+        }
+
+        /* If user is incorrect, end game & reset state variables */
+        else {
+            alert("Incorrect! Game over. You made it to level " + this.state.levelNum + "!");
+            console.log("User got to level: " + this.state.levelNum); // To show user result
+            this.setState({ gameStarted: false, levelNum: 0, selectText: "Press to Begin!" });
+            this.resetBoxes();
+        }
+    }
+    
+    /**
+     *  @function renderImg
+     *  Displays image in box at given time
+     * @param {Image} img - The image to display
+     * @param {number} startTime - The time it appears
+     * @param {number} endTime - The time it disappears
+     */
+     renderImg(img, startTime, endTime) {
+        if (this.state.timer > startTime) {
+            return (
+                <ImageFadeView style={{}}
+                    startTime={startTime}
+                    endTime={endTime}
+                >
+                    <Image style={{ maxHeight: '100%', maxWidth: '100%', borderRadius: 0 }} source={img}></Image>
+                </ImageFadeView>
+            );
+        }
+    }
+
+    /**
+    *  @function renderPromptImg
+    *  Displays the prompt image on the screen/.
+    * @param {Image} img - The image to display
+    * @param {number} startTime - The time it appears
+    */
+    renderPromptImg(img, startTime) {
+        if (this.state.timer > startTime) {
+            return (
+                <PromptFadeView
+                    startTime={startTime}
+                >
+                    <Image style={{ height: '98%', width: '100%', borderRadius: 20 }} source={img}></Image>
+                </PromptFadeView>
+            );
+        }
+    }
+    
+    /**
+    *  @function resetBoxes
+    *  Called at end of game to reset state variables
+    */
+    resetBoxes() {
+        this.setState({ box1: null, box2: null, box3: null, box4: null, box5: null, box6: null });
+        this.setState({ box1Start: null, box2Start: null, box3Start: null, box4Start: null, box5Start: null, box6Start: null });
+        this.setState({ box1End: null, box2End: null, box3End: null, box4End: null, box5End: null, box6End: null });
+        this.setState({ promptBox: null, promptBoxStart: null, inputIndex: 0 });
+    }
+    
+/* Contains the content that is shown to the user */
     render() {
         return (
             <View style={styles.container}>
@@ -375,11 +465,6 @@ class PALScreen extends Component {
                                 <Text style={[styles.buttonText]}>{this.state.selectText}</Text>
                             </TouchableOpacity>
                         </Row>
-                        {/* <Row style={[styles.roundedButtonWrap]}>
-                            <TouchableOpacity style={[styles.roundedButton]} onPress={() => this.beginButton()}>
-                                <Text style={[styles.buttonText]}>{this.state.beginText}</Text>
-                            </TouchableOpacity>
-                        </Row> */}
                         <Row style={{ flex: 0.05 }}></Row>
 
                     </Grid>
@@ -389,4 +474,4 @@ class PALScreen extends Component {
     }
 }
 
-export default PALScreen;
+export default PALScreenCustom;
