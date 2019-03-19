@@ -45,6 +45,16 @@ App Structure
 To-do (Urgent 5, Trivial 1)
 ======
 
+    4/5) Randomise Promptbox validation
+    4/5) Speed up custom picture selection
+    4/5) Prevent early FR button input
+    3/5) Remove duplicate code / extract functions / combine fade views
+    3/5) Add media queries    
+    1/5) Add more FR Words
+    1/5) "Find this" pointing to prompt img 
+
+Done
+=====
     ~~5/5) Add custom testing~~
     ~~5/5) Fix non-appearance bug~~ 
     ~~5/5) Fix up custom testing~~ 
@@ -61,13 +71,7 @@ To-do (Urgent 5, Trivial 1)
     ~~4/5) Clean up FR Layout~~
     ~~3/5) Provide feedback on PAL (Sound alerts, text alerts) (Exchange pop-up alerts for a less intrusive method)~~
     
-    4/5) Randomise Promptbox validation
-    4/5) Speed up custom picture selection
-    4/5) Prevent early FR button input
-    3/5) Remove duplicate code / extract functions / combine fade views
-    3/5) Add media queries    
-    1/5) Add more FR Words
-    1/5) "Find this" pointing to prompt img 
+
 
 
     
