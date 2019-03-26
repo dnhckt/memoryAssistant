@@ -2,7 +2,7 @@ Memory Assistant
 ========================================
 App developed by Aidan Hackett for Final Year Project.
     
-    Project title: Apps for memory training in older users.
+    Project title: Memory Assistant: A Mobile Application for Memory Training in Older Users.
 
 The app contains two versions of two memory tests/games, essentially creating four games.
         
@@ -44,13 +44,8 @@ App Structure
 
 To-do (Urgent 5, Trivial 1)
 ======
-
-    4/5) Randomise Promptbox validation
     4/5) Speed up custom picture selection
-    4/5) Prevent early FR button input
     3/5) Remove duplicate code / extract functions / combine fade views
-    3/5) Add media queries    
-    1/5) Add more FR Words
     1/5) "Find this" pointing to prompt img 
 
 Done
