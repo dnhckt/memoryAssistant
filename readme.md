@@ -3,12 +3,17 @@ Memory Assistant
 App developed by Aidan Hackett for Final Year Project.
     
     Project title: Memory Assistant: A Mobile Application for Memory Training in Older Users.
+<img src="https://github.com/dnhckt/memoryAssistant/blob/master/AndroidSplash.png" width="200"></img>
+<img src="https://github.com/dnhckt/memoryAssistant/blob/master/AndroidHome.png" width="200"></img>
 
 The app contains two versions of two memory tests/games, essentially creating four games.
         
         Game A - Paired Associate Learning Test (Picture Match)
         Game B -  Free Recall & Recognition of Words Test (Word Bingo)     
-    
+
+<img src="https://github.com/dnhckt/memoryAssistant/blob/master/AndroidPALDisplay.png" width="200"></img>
+<img src="https://github.com/dnhckt/memoryAssistant/blob/master/AndroidFRPrompt.png" width="200"></img>
+
 These are varied by user group:
         
         Group 1 (Neutral/Generic Content)
