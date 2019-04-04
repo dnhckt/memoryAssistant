@@ -47,12 +47,6 @@ App Structure
 
     app.json, babel.config.js, package-lock.json, package.json - Configuration files 
 
-To-do (Urgent 5, Trivial 1)
-======
-    4/5) Speed up custom picture selection
-    3/5) Remove duplicate code / extract functions / combine fade views
-    1/5) "Find this" pointing to prompt img 
-
 Done
 =====
     ~~5/5) Add custom testing~~
