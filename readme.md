@@ -46,27 +46,3 @@ App Structure
         logo - Contains all logo icons (splash screen, app home screen, user device)
 
     app.json, babel.config.js, package-lock.json, package.json - Configuration files 
-
-Done
-=====
-    ~~5/5) Add custom testing~~
-    ~~5/5) Fix non-appearance bug~~ 
-    ~~5/5) Fix up custom testing~~ 
-    ~~4/5) Add iOS permissions~~
-    ~~1/5) Change layout of PAL~~
-    ~~2/5) Change layout of PALCustom~~ 
-    ~~1/5) Fish zooming incorrectly~~
-    ~~3/5) PAL comments~~
-    ~~5/5) Fix FR test~~
-    ~~5/5) Fix Going back Bug on Android~~
-    ~~3/5) Prevent early pressing in FR~~
-    ~~3/5) Ready to go > error~~ 
-    ~~1/5) Add more PAL sprites & FR Words~~
-    ~~4/5) Clean up FR Layout~~
-    ~~3/5) Provide feedback on PAL (Sound alerts, text alerts) (Exchange pop-up alerts for a less intrusive method)~~
-    
-
-
-
-    
-
